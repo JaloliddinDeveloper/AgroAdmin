@@ -1,8 +1,6 @@
 ﻿// ---------------------------------------------------------------------------------- 
 // Copyright (c) The Standard Organization, a coalition of the Good-Hearted Engineers 
 // ----------------------------------------------------------------------------------
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace AgroAdmin.Models.Foundations.ProductOnes
 {

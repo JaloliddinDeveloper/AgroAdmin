@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
-
-namespace AgroAdmin.Models.Foundations.ProductTwos
+﻿namespace AgroAdmin.Models.Foundations.ProductTwos
 {
     public class ProductTwo
     {
