@@ -1,4 +1,7 @@
-﻿using AgroAdmin.Brokers.Storages;
+﻿// ---------------------------------------------------------------------------------- 
+// Copyright (c) The Standard Organization, a coalition of the Good-Hearted Engineers 
+// ----------------------------------------------------------------------------------
+using AgroAdmin.Brokers.Storages;
 using AgroAdmin.Models.Foundations.News;
 using AgroAdmin.Models.Foundations.Photos;
 using Microsoft.AspNetCore.Mvc;
@@ -301,7 +304,5 @@ namespace AgroAdmin.Controllers
         {
             return View();
         }
-
-      
     }
 }
