@@ -4,8 +4,19 @@ namespace AgroAdmin.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Index() =>
+             View();
+
+        [HttpPost]
+        public IActionResult Index(string username, string password)
         {
+            if (username == "1" && password == "1")
+            {
+                return RedirectToAction("Index", "Admin");
+            }
+
+            ViewBag.ErrorMessage = "Invalid username or password.";
             return View();
         }
     }
