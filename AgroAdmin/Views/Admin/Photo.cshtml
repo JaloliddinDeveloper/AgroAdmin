@@ -1,1 +1,126 @@
-﻿<h1>Photo</h1>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.Photos
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .table {
+        margin-top: 15px;
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #007bff;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .table img {
+            border-radius: 5px;
+        }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        border: none;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 5px;
+        text-decoration: none;
+        border: none;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+</style>
+@model IEnumerable<Photo>
+
+<h1>Yangilik</h1>
+<a asp-action="AddPhoto" class="btn btn-primary" style="margin-bottom:50px;">Qo'shish</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name (UZ)</th>
+            <th>Name (RU)</th>
+            <th>Image</th>
+            <th>Create Date</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.NameUz</td>
+                <td>@item.NameRu</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.PictureUrl))
+                    {
+                        <img src="@item.PictureUrl" alt="Photo Image" width="100" />
+                    }
+                </td>
+                <td>@item.CreateDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a asp-action="EditPhoto" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="DeletePhoto" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this photo?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

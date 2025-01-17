@@ -1,7 +1,7 @@
 ﻿using AgroAdmin.Brokers.Storages;
 using AgroAdmin.Models.Foundations.News;
+using AgroAdmin.Models.Foundations.Photos;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AgroAdmin.Controllers
 {
@@ -23,6 +23,7 @@ namespace AgroAdmin.Controllers
             return View();
         }
 
+        //Yangilik
         [HttpGet]
         public async ValueTask<IActionResult> Yangilik()
         { 
@@ -159,11 +160,138 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("Yangilik");
         }
 
-        public IActionResult Photo()
+        [HttpGet]
+        public async ValueTask<IActionResult> Photo()
+        {
+            var photos = await this.storageBroker.SelectAllPhotosAsync();
+            return View(photos);
+        }
+
+        //PHOTO 
+        public async ValueTask<IActionResult> AddPhoto()
         {
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddPhoto(Photo photo, IFormFile uploadedImage)
+        {
+            try
+            {
+                if (uploadedImage != null && uploadedImage.Length > 0)
+                {
+                    string uniqueFileName = $"{Guid.NewGuid()}_{uploadedImage.FileName}";
+                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    var directoryPath = Path.GetDirectoryName(filePath);
+                    if (!Directory.Exists(directoryPath))
+                    {
+                        Directory.CreateDirectory(directoryPath);
+                    }
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await uploadedImage.CopyToAsync(fileStream);
+                    }
+
+                    photo.PictureUrl = $"/images/{uniqueFileName}";
+                    photo.CreateDate = DateTimeOffset.Now;
+                }
+
+                await this.storageBroker.InsertPhotoAsync(photo);
+                return RedirectToAction("Photo");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "An error occurred while adding the news item.";
+            }
+            return View();
+        }
+
+        public async ValueTask<IActionResult> EditPhoto(int id)
+        {
+            var photo = await this.storageBroker.SelectPhotoByIdAsync(id);
+            return View(photo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPhoto(Photo updatedPhoto, IFormFile uploadedImage)
+        {
+            if (updatedPhoto == null)
+            {
+                return BadRequest("Invalid photo data.");
+            }
+
+            if (uploadedImage != null && uploadedImage.Length > 0)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(uploadedImage.FileName) +
+                               "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
+
+                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                var directoryPath = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await uploadedImage.CopyToAsync(stream);
+                }
+
+                updatedPhoto.PictureUrl = $"/images/{fileName}";
+            }
+            else if (string.IsNullOrEmpty(updatedPhoto.PictureUrl))
+            {
+                var existingPhoto = await this.storageBroker.SelectPhotoByIdAsync(updatedPhoto.Id);
+                if (existingPhoto != null)
+                {
+                    updatedPhoto.PictureUrl = existingPhoto.PictureUrl;
+                }
+            }
+
+            var existingPhotoToUpdate = await this.storageBroker.SelectPhotoByIdAsync(updatedPhoto.Id);
+            if (existingPhotoToUpdate == null)
+            {
+                return NotFound("Photo not found.");
+            }
+
+            existingPhotoToUpdate.NameUz = updatedPhoto.NameUz;
+            existingPhotoToUpdate.NameRu = updatedPhoto.NameRu;
+            existingPhotoToUpdate.PictureUrl = updatedPhoto.PictureUrl;
+            existingPhotoToUpdate.CreateDate = DateTimeOffset.Now;
+
+            try
+            {
+                await this.storageBroker.UpdatePhotoAsync(existingPhotoToUpdate);
+                TempData["Message"] = "Photo successfully updated!";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = "An error occurred while updating the photo.";
+            }
+
+            return RedirectToAction("Photo");
+        }
+
+        [HttpPost]
+        public async ValueTask<IActionResult> DeletePhoto(int id)
+        {
+            var newsItem = await this.storageBroker.SelectPhotoByIdAsync(id);
+            if (newsItem == null)
+            {
+                return NotFound();
+            }
+
+            await this.storageBroker.DeletePhotoAsync(newsItem);
+
+            return RedirectToAction("Photo");
+        }
+
+        //ProductOne
         public IActionResult ProOne()
         {
             return View();
@@ -173,5 +301,7 @@ namespace AgroAdmin.Controllers
         {
             return View();
         }
+
+      
     }
 }
