@@ -21,10 +21,9 @@ namespace AgroAdmin.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
+        public ActionResult Index()=>
+             View();
+       
 
         //Yangilik
         [HttpGet]
