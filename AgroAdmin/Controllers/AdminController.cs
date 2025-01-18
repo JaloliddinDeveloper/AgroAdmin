@@ -24,7 +24,6 @@ namespace AgroAdmin.Controllers
         public ActionResult Index()=>
              View();
        
-
         //Yangilik
         [HttpGet]
         public async ValueTask<IActionResult> Yangilik()
@@ -35,11 +34,9 @@ namespace AgroAdmin.Controllers
         }
 
         [HttpGet]
-        public async ValueTask<IActionResult> AddYangilik()
-        {
-            return View();
-        }
-
+        public async ValueTask<IActionResult> AddYangilik()=>
+             View();
+        
         [HttpPost]
         public async Task<IActionResult> AddYangilik(New yangilik, IFormFile uploadedImage)
         {
@@ -170,11 +167,9 @@ namespace AgroAdmin.Controllers
         }
 
         //PHOTO 
-        public async ValueTask<IActionResult> AddPhoto()
-        {
-            return View();
-        }
-
+        public async ValueTask<IActionResult> AddPhoto()=>
+             View();
+        
         [HttpPost]
         public async Task<IActionResult> AddPhoto(Photo photo, IFormFile uploadedImage)
         {
