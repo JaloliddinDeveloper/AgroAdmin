@@ -7,11 +7,10 @@ using AgroAdmin.Models.Foundations.Photos;
 using AgroAdmin.Models.Foundations.ProductOnes;
 using AgroAdmin.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace AgroAdmin.Controllers
 {
-    public class AdminController: Controller
+    public class AdminController : Controller
     {
         private readonly IStorageBroker storageBroker;
         private readonly IWebHostEnvironment webHostEnvironment;
@@ -24,22 +23,22 @@ namespace AgroAdmin.Controllers
             this.webHostEnvironment = webHostEnvironment;
         }
 
-        public ActionResult Index()=>
+        public ActionResult Index() =>
              View();
-       
+
         //Yangilik
         [HttpGet]
         public async ValueTask<IActionResult> Yangilik()
-        { 
-            var newss=await this.storageBroker.SelectAllNewsAsync();
+        {
+            var newss = await this.storageBroker.SelectAllNewsAsync();
 
             return View(newss);
         }
 
         [HttpGet]
-        public async ValueTask<IActionResult> AddYangilik()=>
+        public async ValueTask<IActionResult> AddYangilik() =>
              View();
-        
+
         [HttpPost]
         public async Task<IActionResult> AddYangilik(New yangilik, IFormFile uploadedImage)
         {
@@ -75,7 +74,7 @@ namespace AgroAdmin.Controllers
             }
             return View();
         }
-         
+
         public async ValueTask<IActionResult> EditYangilik(int id)
         {
             var yangilik = await this.storageBroker.SelectNewByIdAsync(id);
@@ -157,7 +156,7 @@ namespace AgroAdmin.Controllers
                 return NotFound();
             }
 
-           await this.storageBroker.DeleteNewAsync(newsItem);
+            await this.storageBroker.DeleteNewAsync(newsItem);
 
             return RedirectToAction("Yangilik");
         }
@@ -170,9 +169,9 @@ namespace AgroAdmin.Controllers
         }
 
         //PHOTO 
-        public async ValueTask<IActionResult> AddPhoto()=>
+        public async ValueTask<IActionResult> AddPhoto() =>
              View();
-        
+
         [HttpPost]
         public async Task<IActionResult> AddPhoto(Photo photo, IFormFile uploadedImage)
         {
@@ -366,7 +365,7 @@ namespace AgroAdmin.Controllers
                     AdditionUz = product.AdditionUz,
                     AdditionRu = product.AdditionRu
                 };
-               await this.storageBroker.InsertProductOneAsync(newProduct);
+                await this.storageBroker.InsertProductOneAsync(newProduct);
 
                 return RedirectToAction("ProOne");
             }
@@ -481,7 +480,7 @@ namespace AgroAdmin.Controllers
 
         }
 
-      
+
         public async Task<IActionResult> JadvalBir(int id)
         {
             var proOne = await this.storageBroker.SelectProductOneByIdAsync(id);
@@ -503,9 +502,105 @@ namespace AgroAdmin.Controllers
             return View(viewModel);
         }
 
+        public async Task<IActionResult> AddJadvalBir(int id)
+        {
+            var proOne = await this.storageBroker.SelectProductOneByIdAsync(id);
+
+            if (proOne == null)
+            {
+                return NotFound();
+            }
+
+            var word = new TableOne
+            {
+                ProductOneId = proOne.Id
+            };
+            return View(word);
+        }
+
+        [HttpPost]
+        public async ValueTask<IActionResult> AddJadvalBir(TableOne tableOne)
+        {
+
+            var tableOneTrue = new TableOne
+            {
+                EkinTuriUz = tableOne.EkinTuriUz,
+                EkinTuriRu = tableOne.EkinTuriRu,
+                BegonaQarshiUz = tableOne.BegonaQarshiUz,
+                BegonaQarshiRu = tableOne.BegonaQarshiRu,
+                SarfMeyoriUz = tableOne.SarfMeyoriUz,
+                SarfMeyoriRu = tableOne.SarfMeyoriRu,
+                BirgaSarfUz = tableOne.BirgaSarfUz,
+                BirgaSarfRu = tableOne.BirgaSarfRu,
+                Onlsum = tableOne.Onlsum,
+                ProductOneId = tableOne.ProductOneId
+            };
+
+            // Don't set Id here, let SQL Server handle it.
+            await this.storageBroker.InsertTableOneAsync(tableOneTrue);
+
+            return RedirectToAction("JadvalBir", new { id = tableOne.ProductOneId });
+
+        }
+
+        public async Task<IActionResult> EditJadvalBir(int id)
+        {
+            var tableOne = await this.storageBroker.SelectTableOneByIdAsync(id);
+
+            if (tableOne == null)
+            {
+                return NotFound();
+            }
+
+            return View(tableOne);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditJadvalBir(int id, TableOne tableOne)
+        {
+            if (id != tableOne.Id)
+            {
+                return NotFound();
+            }
+
+            var existingTableOne = await this.storageBroker.SelectTableOneByIdAsync(id);
+
+            if (existingTableOne == null)
+            {
+                return NotFound();
+            }
+
+            existingTableOne.EkinTuriUz = tableOne.EkinTuriUz;
+            existingTableOne.EkinTuriRu = tableOne.EkinTuriRu;
+            existingTableOne.BegonaQarshiUz = tableOne.BegonaQarshiUz;
+            existingTableOne.BegonaQarshiRu = tableOne.BegonaQarshiRu;
+            existingTableOne.SarfMeyoriUz = tableOne.SarfMeyoriUz;
+            existingTableOne.SarfMeyoriRu = tableOne.SarfMeyoriRu;
+            existingTableOne.BirgaSarfUz = tableOne.BirgaSarfUz;
+            existingTableOne.BirgaSarfRu = tableOne.BirgaSarfRu;
+            existingTableOne.Onlsum = tableOne.Onlsum;
+            existingTableOne.ProductOneId = tableOne.ProductOneId;
+
+            await this.storageBroker.UpdateTableOneAsync(existingTableOne);
+
+            return RedirectToAction("JadvalBir", new { id = tableOne.ProductOneId });
+        }
 
 
+        [HttpPost]
+        public async ValueTask<IActionResult> DeleteJadvalBir(int id)
+        {
+            var newsItem = await this.storageBroker.SelectTableOneByIdAsync(id);
+            if (newsItem == null)
+            {
+                return NotFound();
+            }
 
+            await this.storageBroker.DeleteTableOneAsync(newsItem);
+
+            return RedirectToAction("JadvalBir", new { id = newsItem.ProductOneId });
+
+        }
         public IActionResult ProTwo()
         {
             return View();

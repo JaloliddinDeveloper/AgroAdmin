@@ -1,0 +1,129 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductOnes
+@model TableOne
+
+<h2>@ViewData["Title"]</h2>
+<style>
+   
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+    .btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+    form {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 600px;
+        align-items: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="number"], input[type="hidden"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+        }
+
+    span.text-danger {
+        font-size: 12px;
+        color: #e74c3c;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+</style>
+
+<form asp-action="AddJadvalBir" method="post">
+    <div class="form-group">
+        <label for="EkinTuriUz">Ekin Turi (Uz)</label>
+        <input asp-for="EkinTuriUz" class="form-control" id="EkinTuriUz" required />
+        <span asp-validation-for="EkinTuriUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="EkinTuriRu">Ekin Turi (Ru)</label>
+        <input asp-for="EkinTuriRu" class="form-control" id="EkinTuriRu" required />
+        <span asp-validation-for="EkinTuriRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="BegonaQarshiUz">Begona Qarshi (Uz)</label>
+        <input asp-for="BegonaQarshiUz" class="form-control" id="BegonaQarshiUz" required />
+        <span asp-validation-for="BegonaQarshiUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="BegonaQarshiRu">Begona Qarshi (Ru)</label>
+        <input asp-for="BegonaQarshiRu" class="form-control" id="BegonaQarshiRu" required />
+        <span asp-validation-for="BegonaQarshiRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="SarfMeyoriUz">Sarf Meyori (Uz)</label>
+        <input asp-for="SarfMeyoriUz" class="form-control" id="SarfMeyoriUz" required />
+        <span asp-validation-for="SarfMeyoriUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="SarfMeyoriRu">Sarf Meyori (Ru)</label>
+        <input asp-for="SarfMeyoriRu" class="form-control" id="SarfMeyoriRu" required />
+        <span asp-validation-for="SarfMeyoriRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="BirgaSarfUz">Birga Sarf (Uz)</label>
+        <input asp-for="BirgaSarfUz" class="form-control" id="BirgaSarfUz" required />
+        <span asp-validation-for="BirgaSarfUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="BirgaSarfRu">Birga Sarf (Ru)</label>
+        <input asp-for="BirgaSarfRu" class="form-control" id="BirgaSarfRu" required />
+        <span asp-validation-for="BirgaSarfRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Onlsum">Onlsum</label>
+        <input asp-for="Onlsum" class="form-control" id="Onlsum" required />
+        <span asp-validation-for="Onlsum" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" name="ProductOneId" value="@Model.ProductOneId" />
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
