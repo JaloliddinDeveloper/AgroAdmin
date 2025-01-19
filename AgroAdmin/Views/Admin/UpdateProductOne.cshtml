@@ -1,0 +1,205 @@
+﻿@using AgroAdmin.Models.Foundations.ProductOnes
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model ProductOne
+
+<style>
+
+    /* General Form Styling */
+    form {
+        max-width: 800px;
+        margin: auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: 'Arial', sans-serif;
+    }
+
+    /* Form Group Styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    /* Label Styling */
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    /* Input and Select Styling */
+    input.form-control, textarea.form-control, select.form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+
+        /* Focus State */
+        input.form-control:focus, textarea.form-control:focus, select.form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    /* Button Styling */
+    button.btn-primary {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    /* Validation Error Styling */
+    .text-danger {
+        color: #dc3545;
+        font-size: 12px;
+    }
+
+    /* Responsive Styling */
+    (max-width: 600px) {
+        form
+
+    {
+        padding: 15px;
+    }
+
+    button.btn-primary {
+        font-size: 14px;
+    }
+
+    }
+</style>
+
+<form asp-action="UpdateProductOne" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="TitleUz"></label>
+        <input asp-for="TitleUz" class="form-control" />
+        <span asp-validation-for="TitleUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TitleRu"></label>
+        <input asp-for="TitleRu" class="form-control" />
+        <span asp-validation-for="TitleRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DesUz"></label>
+        <input asp-for="DesUz" class="form-control" />
+        <span asp-validation-for="DesUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DesRu"></label>
+        <input asp-for="DesRu" class="form-control" />
+        <span asp-validation-for="DesRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DescriptionUz"></label>
+        <textarea asp-for="DescriptionUz" class="form-control"></textarea>
+        <span asp-validation-for="DescriptionUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DescriptionRu"></label>
+        <textarea asp-for="DescriptionRu" class="form-control"></textarea>
+        <span asp-validation-for="DescriptionRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TasirModdaUz"></label>
+        <input asp-for="TasirModdaUz" class="form-control" />
+        <span asp-validation-for="TasirModdaUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TasirModdaRu"></label>
+        <input asp-for="TasirModdaRu" class="form-control" />
+        <span asp-validation-for="TasirModdaRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="KimyoviySinfiUz"></label>
+        <input asp-for="KimyoviySinfiUz" class="form-control" />
+        <span asp-validation-for="KimyoviySinfiUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="KimyoviySinfiRu"></label>
+        <input asp-for="KimyoviySinfiRu" class="form-control" />
+        <span asp-validation-for="KimyoviySinfiRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PreparatShakliUz"></label>
+        <input asp-for="PreparatShakliUz" class="form-control" />
+        <span asp-validation-for="PreparatShakliUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PreparatShakliRu"></label>
+        <input asp-for="PreparatShakliRu" class="form-control" />
+        <span asp-validation-for="PreparatShakliRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QadogiUz"></label>
+        <input asp-for="QadogiUz" class="form-control" />
+        <span asp-validation-for="QadogiUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="QadogiRu"></label>
+        <input asp-for="QadogiRu" class="form-control" />
+        <span asp-validation-for="QadogiRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductType"></label>
+        <select asp-for="ProductType" class="form-control" asp-items="Html.GetEnumSelectList<ProductType>()"></select>
+        <span asp-validation-for="ProductType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdditionUz"></label>
+        <input asp-for="AdditionUz" class="form-control" />
+        <span asp-validation-for="AdditionUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="AdditionRu"></label>
+        <input asp-for="AdditionRu" class="form-control" />
+        <span asp-validation-for="AdditionRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductPicture">Upload New Product Picture</label>
+        <input asp-for="ProductPicture" type="file" class="form-control" name="productPicture" />
+        <span asp-validation-for="ProductPicture" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="IconUrl">Upload New Icon</label>
+        <input asp-for="IconUrl" type="file" class="form-control" name="iconUrl" />
+        <span asp-validation-for="IconUrl" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update Product</button>
+</form>

@@ -26,5 +26,12 @@ namespace AgroAdmin.Brokers.Storages
 
         public async ValueTask<TableOne> DeleteTableOneAsync(TableOne tableOne) =>
             await DeleteAsync(tableOne);
+
+        public async Task<IEnumerable<TableOne>> GetTableOnesProOneByIdAsync(int proOneId)
+        {
+            return await this.TableOnes
+                .Where(b => b.ProductOneId == proOneId)
+                .ToListAsync();
+        }
     }
 }

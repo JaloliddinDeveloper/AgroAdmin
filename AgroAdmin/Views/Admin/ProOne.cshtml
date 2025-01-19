@@ -1,1 +1,237 @@
-﻿<h1>Ximoya vositalari</h1>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductOnes
+
+@model IQueryable<ProductOne>
+
+@{
+    ViewData["Title"] = "Mahsulotlar Ro'yxati"; // Product List
+    int serialNumber = 1; // Initialize the counter
+}
+
+<div class="container">
+    <div class="header">
+        <h1>@ViewData["Title"]</h1>
+        <a asp-controller="Admin" asp-action="AddProductOne" class="btn btn-primary">Mahsulot Qo'shish</a> <!-- Add Product Button -->
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>#</th> <!-- Serial Number -->
+                <th>Id</th>
+                <th>Nom (Uz)</th>
+                <th>Nom (Ru)</th>
+                <th>Tavsif (Uz)</th>
+                <th>Tavsif (Ru)</th>
+                <th>TavsifTo'liq (Uz)</th>
+                <th>TavsifTo'liq (Ru)</th>
+                <th>Tasir Modda (Uz)</th>
+                <th>Tasir Modda (Ru)</th>
+                <th>Kimyoviy Sinfi (Uz)</th>
+                <th>Kimyoviy Sinfi (Ru)</th>
+                <th>Preparat Shakli (Uz)</th>
+                <th>Preparat Shakli (Ru)</th>
+                <th>Qadogi (Uz)</th>
+                <th>Qadogi (Ru)</th>
+                <th>Icon URL</th>
+                <th>Rasm</th>
+                <th>Mahsulot Turi</th>
+                <th>Qo'shimcha (O'zbekcha)</th>
+                <th>Qo'shimcha (Ruscha)</th>
+                <th>Amallar</th> <!-- Actions -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@serialNumber</td> <!-- Display serial number -->
+                    <td>@product.Id</td>
+                    <td>@product.TitleUz</td> <!-- Title in Uzbek -->
+                    <td>@product.TitleRu</td> <!-- Title in Russian -->
+                    <td>@product.DesUz</td> <!-- Description in Uzbek -->
+                    <td>@product.DesRu</td> <!-- Description in Russian -->
+                    <td>@product.DescriptionUz</td> <!-- Full Description in Uzbek -->
+                    <td>@product.DescriptionRu</td> <!-- Full Description in Russian -->
+                    <td>@product.TasirModdaUz</td> <!-- Tasir Modda in Uzbek -->
+                    <td>@product.TasirModdaRu</td> <!-- Tasir Modda in Russian -->
+                    <td>@product.KimyoviySinfiUz</td> <!-- Kimyoviy Sinfi in Uzbek -->
+                    <td>@product.KimyoviySinfiRu</td> <!-- Kimyoviy Sinfi in Russian -->
+                    <td>@product.PreparatShakliUz</td> <!-- Preparat Shakli in Uzbek -->
+                    <td>@product.PreparatShakliRu</td> <!-- Preparat Shakli in Russian -->
+                    <td>@product.QadogiUz</td> <!-- Qadogi in Uzbek -->
+                    <td>@product.QadogiRu</td> <!-- Qadogi in Russian -->
+                    <td>
+                        <img src="@product.IconUrl" alt="Icon Rasm" class="img-thumbnail" style="width: 50px; height: 50px;" />
+                    </td>
+                    <td>
+                        <img src="@product.ProductPicture" alt="Mahsulot Rasm" class="img-thumbnail" style="width: 50px; height: 50px;" />
+                    </td>
+                    <td>@product.ProductType</td>
+                    <td>@product.AdditionUz</td> <!-- Additional info in Uzbek -->
+                    <td>@product.AdditionRu</td> <!-- Additional info in Russian -->
+                    <td>
+                        <a asp-controller="Admin" asp-action="JadvalBir" asp-route-id="@product.Id" class="btn btn-success modern-btn">Jadval</a>
+                        <a asp-controller="Admin" asp-action="UpdateProductOne" asp-route-id="@product.Id" class="btn btn-warning modern-btn">Tahrirlash</a>
+                        <form asp-action="DeleteProductOne" asp-route-id="@product.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this news item?');">
+                            <button type="submit" class="btn btn-danger btn-sm modern-btn">Delete</button>
+                        </form>
+                    </td>
+
+                </tr>
+                serialNumber++;
+                <!-- Increment the counter -->
+            }
+        </tbody>
+    </table>
+</div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bolimclass {
+        background-color: green;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #333;
+        }
+
+        .header .btn-primary {
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+            .header .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-top: 10px;
+    }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f0f0f0;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+    .btn {
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.3s;
+        display: inline-block;
+        width: 100px;
+        margin-bottom:8px;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    /* Common button styles */
+    .modern-btn {
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Success button */
+    .btn-success {
+        background-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    /* Warning button */
+    .btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    /* Danger button */
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    /* Inline form style for modern look */
+    form[style*="display:inline;"] {
+        display: inline-block;
+        margin: 5px;
+    }
+
+</style>
