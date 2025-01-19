@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgroAdmin.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20250117141643_CreateAllTablesInitialize")]
+    [Migration("20250119170549_CreateAllTablesInitialize")]
     partial class CreateAllTablesInitialize
     {
         /// <inheritdoc />

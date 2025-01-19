@@ -4,8 +4,8 @@
 @model IQueryable<ProductOne>
 
 @{
-    ViewData["Title"] = "Mahsulotlar Ro'yxati"; // Product List
-    int serialNumber = 1; // Initialize the counter
+    ViewData["Title"] = "Mahsulotlar Ro'yxati";
+    int serialNumber = 1; 
 }
 
 <div class="container">
@@ -17,7 +17,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>#</th> <!-- Serial Number -->
+                <th>#</th> 
                 <th>Id</th>
                 <th>Nom (Uz)</th>
                 <th>Nom (Ru)</th>
@@ -98,7 +98,6 @@
     }
 
     .container {
-        max-width: 1200px;
         margin: 50px auto;
         background: #ffffff;
         padding: 20px;
@@ -121,7 +120,7 @@
 
         .header .btn-primary {
             background-color: #007bff;
-            color: white;
+           
             text-decoration: none;
             padding: 10px 15px;
             border-radius: 5px;
@@ -134,7 +133,7 @@
             }
 
     .table {
-        width: 100%;
+      
         border-collapse: collapse;
         border-spacing: 0;
         margin-top: 10px;
@@ -186,7 +185,6 @@
             background-color: #c82333;
         }
 
-    /* Common button styles */
     .modern-btn {
         font-family: 'Arial', sans-serif;
         font-size: 14px;

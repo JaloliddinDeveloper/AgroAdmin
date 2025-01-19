@@ -1,0 +1,103 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductOnes
+@model TableOne
+<style>
+    /* Form Container */
+    form {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        max-width: 600px;
+        margin: 0 auto;
+        display: block;
+    }
+
+    /* Form Labels */
+    label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    /* Form Inputs */
+    input[type="text"] {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin-bottom: 15px;
+        font-size: 14px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+        /* Input Hover/Focus Effects */
+        input[type="text"]:hover,
+        input[type="text"]:focus {
+            border-color: #007bff;
+            background-color: #fff;
+            outline: none;
+        }
+
+    /* Submit Button */
+    button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+        transition: background-color 0.3s;
+    }
+
+        /* Button Hover Effect */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+</style>
+<form asp-action="EditJadvalBir" method="post">
+    <div class="form-group">
+        <label for="EkinTuriUz">Ekin Turi (Uz)</label>
+        <input type="text" id="EkinTuriUz" name="EkinTuriUz" class="form-control" value="@Model.EkinTuriUz" required />
+    </div>
+    <div class="form-group">
+        <label for="EkinTuriRu">Ekin Turi (Ru)</label>
+        <input type="text" id="EkinTuriRu" name="EkinTuriRu" class="form-control" value="@Model.EkinTuriRu" required />
+    </div>
+    <div class="form-group">
+        <label for="BegonaQarshiUz">Begona Qarshi (Uz)</label>
+        <input type="text" id="BegonaQarshiUz" name="BegonaQarshiUz" class="form-control" value="@Model.BegonaQarshiUz" required />
+    </div>
+    <div class="form-group">
+        <label for="BegonaQarshiRu">Begona Qarshi (Ru)</label>
+        <input type="text" id="BegonaQarshiRu" name="BegonaQarshiRu" class="form-control" value="@Model.BegonaQarshiRu" required />
+    </div>
+    <div class="form-group">
+        <label for="SarfMeyoriUz">Sarf Meyori (Uz)</label>
+        <input type="text" id="SarfMeyoriUz" name="SarfMeyoriUz" class="form-control" value="@Model.SarfMeyoriUz" required />
+    </div>
+    <div class="form-group">
+        <label for="SarfMeyoriRu">Sarf Meyori (Ru)</label>
+        <input type="text" id="SarfMeyoriRu" name="SarfMeyoriRu" class="form-control" value="@Model.SarfMeyoriRu" required />
+    </div>
+    <div class="form-group">
+        <label for="BirgaSarfUz">Birga Sarf (Uz)</label>
+        <input type="text" id="BirgaSarfUz" name="BirgaSarfUz" class="form-control" value="@Model.BirgaSarfUz" required />
+    </div>
+    <div class="form-group">
+        <label for="BirgaSarfRu">Birga Sarf (Ru)</label>
+        <input type="text" id="BirgaSarfRu" name="BirgaSarfRu" class="form-control" value="@Model.BirgaSarfRu" required />
+    </div>
+    <div class="form-group">
+        <label for="Onlsum">Onlsum</label>
+        <input type="text" id="Onlsum" name="Onlsum" class="form-control" value="@Model.Onlsum" required />
+    </div>
+    <input type="hidden" name="ProductOneId" value="@Model.ProductOneId" />
+    <button type="submit" class="btn btn-primary">Update</button>
+</form>
