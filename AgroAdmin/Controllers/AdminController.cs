@@ -4,7 +4,10 @@
 using AgroAdmin.Brokers.Storages;
 using AgroAdmin.Models.Foundations.News;
 using AgroAdmin.Models.Foundations.Photos;
+using AgroAdmin.Models.Foundations.ProductOnes;
+using AgroAdmin.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AgroAdmin.Controllers
 {
@@ -288,11 +291,220 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("Photo");
         }
 
-        //ProductOne
-        public IActionResult ProOne()
+        [HttpGet]
+        public async ValueTask<IActionResult> ProOne()
+        {
+            var prones = await this.storageBroker.SelectAllProductOnesAsync();
+            return View(prones);
+        }
+
+        [HttpGet]
+        public async ValueTask<IActionResult> AddProductOne()
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProductOne(ProductOne product, IFormFile productPicture, IFormFile iconUrl)
+        {
+            if (true)
+            {
+                if (productPicture != null && productPicture.Length > 0)
+                {
+                    var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
+
+                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                    if (!Directory.Exists(productPictureDirectory))
+                    {
+                        Directory.CreateDirectory(productPictureDirectory);
+                    }
+
+                    using (var stream = new FileStream(productPicturePath, FileMode.Create))
+                    {
+                        await productPicture.CopyToAsync(stream);
+                    }
+
+                    product.ProductPicture = "/images/" + productPicture.FileName;
+                }
+
+                if (iconUrl != null && iconUrl.Length > 0)
+                {
+                    var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
+
+                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                    if (!Directory.Exists(iconUrlDirectory))
+                    {
+                        Directory.CreateDirectory(iconUrlDirectory);
+                    }
+
+                    using (var stream = new FileStream(iconUrlPath, FileMode.Create))
+                    {
+                        await iconUrl.CopyToAsync(stream);
+                    }
+
+                    product.IconUrl = "/images/" + iconUrl.FileName;
+                }
+                var newProduct = new ProductOne
+                {
+                    TitleUz = product.TitleUz,
+                    TitleRu = product.TitleRu,
+                    DesUz = product.DesUz,
+                    DesRu = product.DesRu,
+                    DescriptionUz = product.DescriptionUz,
+                    DescriptionRu = product.DescriptionRu,
+                    TasirModdaUz = product.TasirModdaUz,
+                    TasirModdaRu = product.TasirModdaRu,
+                    KimyoviySinfiUz = product.KimyoviySinfiUz,
+                    KimyoviySinfiRu = product.KimyoviySinfiRu,
+                    PreparatShakliUz = product.PreparatShakliUz,
+                    PreparatShakliRu = product.PreparatShakliRu,
+                    QadogiUz = product.QadogiUz,
+                    QadogiRu = product.QadogiRu,
+                    IconUrl = product.IconUrl,
+                    ProductPicture = product.ProductPicture,
+                    ProductType = product.ProductType,
+                    AdditionUz = product.AdditionUz,
+                    AdditionRu = product.AdditionRu
+                };
+               await this.storageBroker.InsertProductOneAsync(newProduct);
+
+                return RedirectToAction("ProOne");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateProductOne(int id)
+        {
+            var product = await this.storageBroker.SelectProductOneByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProductOne(int id, ProductOne product, IFormFile productPicture, IFormFile iconUrl)
+        {
+            if (id != product.Id)
+            {
+                return BadRequest();
+            }
+
+            var existingProduct = await this.storageBroker.SelectProductOneByIdAsync(id);
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            if (productPicture != null && productPicture.Length > 0)
+            {
+                var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
+                var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                if (!Directory.Exists(productPictureDirectory))
+                {
+                    Directory.CreateDirectory(productPictureDirectory);
+                }
+
+                using (var stream = new FileStream(productPicturePath, FileMode.Create))
+                {
+                    await productPicture.CopyToAsync(stream);
+                }
+
+                product.ProductPicture = "/images/" + productPicture.FileName;
+            }
+            else
+            {
+                product.ProductPicture = existingProduct.ProductPicture;
+            }
+
+            if (iconUrl != null && iconUrl.Length > 0)
+            {
+                var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
+                var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                if (!Directory.Exists(iconUrlDirectory))
+                {
+                    Directory.CreateDirectory(iconUrlDirectory);
+                }
+
+                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
+                {
+                    await iconUrl.CopyToAsync(stream);
+                }
+
+                product.IconUrl = "/images/" + iconUrl.FileName;
+            }
+            else
+            {
+                product.IconUrl = existingProduct.IconUrl;
+            }
+
+            existingProduct.TitleUz = product.TitleUz;
+            existingProduct.TitleRu = product.TitleRu;
+            existingProduct.DesUz = product.DesUz;
+            existingProduct.DesRu = product.DesRu;
+            existingProduct.DescriptionUz = product.DescriptionUz;
+            existingProduct.DescriptionRu = product.DescriptionRu;
+            existingProduct.TasirModdaUz = product.TasirModdaUz;
+            existingProduct.TasirModdaRu = product.TasirModdaRu;
+            existingProduct.KimyoviySinfiUz = product.KimyoviySinfiUz;
+            existingProduct.KimyoviySinfiRu = product.KimyoviySinfiRu;
+            existingProduct.PreparatShakliUz = product.PreparatShakliUz;
+            existingProduct.PreparatShakliRu = product.PreparatShakliRu;
+            existingProduct.QadogiUz = product.QadogiUz;
+            existingProduct.QadogiRu = product.QadogiRu;
+            existingProduct.ProductPicture = product.ProductPicture;
+            existingProduct.IconUrl = product.IconUrl;
+            existingProduct.ProductType = product.ProductType;
+            existingProduct.AdditionUz = product.AdditionUz;
+            existingProduct.AdditionRu = product.AdditionRu;
+
+            await this.storageBroker.UpdateProductOneAsync(existingProduct);
+
+            return RedirectToAction("ProOne");
+        }
+
+
+        [HttpPost]
+        public async ValueTask<IActionResult> DeleteProductOne(int id)
+        {
+            var newsItem = await this.storageBroker.SelectProductOneByIdAsync(id);
+            if (newsItem == null)
+            {
+                return NotFound();
+            }
+
+            await this.storageBroker.DeleteProductOneAsync(newsItem);
+
+            return RedirectToAction("ProOne");
+
+        }
+
+      
+        public async Task<IActionResult> JadvalBir(int id)
+        {
+            var proOne = await this.storageBroker.SelectProductOneByIdAsync(id);
+
+            if (proOne == null)
+            {
+                return NotFound();
+            }
+
+            var jadvallar = await storageBroker.GetTableOnesProOneByIdAsync(id);
+
+            var viewModel = new TableOnePageViewModel
+            {
+                ProuctOneId = proOne.Id,
+                ProductOnename = proOne.TitleUz,
+                TableOnes = jadvallar
+            };
+
+            return View(viewModel);
+        }
+
+
+
 
         public IActionResult ProTwo()
         {

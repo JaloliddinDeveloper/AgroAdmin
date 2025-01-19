@@ -29,3 +29,4 @@ namespace AgroAdmin.Models.Foundations.ProductOnes
         public List<TableOne> TableOnes { get; set; }  
     }
 }
+                 

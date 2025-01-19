@@ -14,5 +14,7 @@ namespace AgroAdmin.Brokers.Storages
         ValueTask<TableOne> SelectTableOneByIdAsync(int TableOneId);
         ValueTask<TableOne> UpdateTableOneAsync(TableOne TableOne);
         ValueTask<TableOne> DeleteTableOneAsync(TableOne TableOne);
+
+        Task<IEnumerable<TableOne>> GetTableOnesProOneByIdAsync(int proOneId);
     }
 }
