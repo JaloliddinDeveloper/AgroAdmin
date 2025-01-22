@@ -1,0 +1,183 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductTwos
+@model ProductTwo
+<style>
+
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="file"],
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s;
+    }
+
+        input[type="text"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    span.text-danger {
+        color: #e3342f;
+        font-size: 0.9em;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+</style>
+
+<form asp-action="AddProductTwo" method="post" enctype="multipart/form-data" class="p-4 border rounded shadow-sm">
+    <h2 class="text-primary mb-4">Add New Product</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="TitleUz" class="font-weight-bold"></label>
+                <input asp-for="TitleUz" class="form-control" />
+                <span asp-validation-for="TitleUz" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="TitleRu" class="font-weight-bold"></label>
+                <input asp-for="TitleRu" class="form-control" />
+                <span asp-validation-for="TitleRu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="NameUz" class="font-weight-bold"></label>
+                <input asp-for="NameUz" class="form-control" />
+                <span asp-validation-for="NameUz" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="NameRu" class="font-weight-bold"></label>
+                <input asp-for="NameRu" class="form-control" />
+                <span asp-validation-for="NameRu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="DesUz" class="font-weight-bold"></label>
+                <input asp-for="DesUz" class="form-control" />
+                <span asp-validation-for="DesUz" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="DesRu" class="font-weight-bold"></label>
+                <input asp-for="DesRu" class="form-control" />
+                <span asp-validation-for="DesRu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="DescriptionUZ" class="font-weight-bold"></label>
+                <input asp-for="DescriptionUZ" class="form-control" />
+                <span asp-validation-for="DescriptionUZ" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="DescriptionRu" class="font-weight-bold"></label>
+                <input asp-for="DescriptionRu" class="form-control" />
+                <span asp-validation-for="DescriptionRu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="SarfUz" class="font-weight-bold"></label>
+                <input asp-for="SarfUz" class="form-control" />
+                <span asp-validation-for="SarfUz" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="SarfRu" class="font-weight-bold"></label>
+                <input asp-for="SarfRu" class="form-control" />
+                <span asp-validation-for="SarfRu" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <label asp-for="ProductPicture">Upload Product Picture</label>
+            <input asp-for="ProductPicture" type="file" class="form-control" name="productPicture" />
+            <span asp-validation-for="ProductPicture" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ProductIcon">Upload Icon</label>
+            <input asp-for="ProductIcon" type="file" class="form-control" name="iconUrl" />
+            <span asp-validation-for="ProductIcon" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductTwoType" class="font-weight-bold"></label>
+        <select asp-for="ProductTwoType" class="form-control" asp-items="Html.GetEnumSelectList<ProductTwoType>()"></select>
+        <span asp-validation-for="ProductTwoType" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Product</button>
+</form>
