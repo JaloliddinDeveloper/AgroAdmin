@@ -1,1 +1,229 @@
-﻿<h1>Oziqlantrish Vositalari</h1>
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductTwos
+
+@model IQueryable<ProductTwo>
+
+@{
+    ViewData["Title"] = "O'g'itlar Ro'yxati";
+    int serialNumber = 1;
+}
+
+<div class="container">
+    <div class="header">
+        <h1>@ViewData["Title"]</h1>
+        <a asp-controller="Admin" asp-action="AddProductTwo" class="btn btn-primary">Qo'shish</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Id</th>
+                <th>Title (Uz)</th>
+                <th>Title (Ru)</th>
+                <th>Name (Uz)</th>
+                <th>Name (Ru)</th>
+                <th>Short Description (Uz)</th>
+                <th>Short Description (Ru)</th>
+                <th>Full Description (Uz)</th>
+                <th>Full Description (Ru)</th>
+                <th>Active Ingredient (Uz)</th>
+                <th>Active Ingredient (Ru)</th>
+                <th>Product Picture</th>
+                <th>Product Icon</th>
+                <th>Product Type</th>
+                <th>Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null)
+            {
+                int index = 1;
+                foreach (var product in Model)
+                {
+                    <tr>
+                        <td>@index</td>
+                        <td>@product.Id</td>
+                        <td>@product.TitleUz</td>
+                        <td>@product.TitleRu</td>
+                        <td>@product.NameUz</td>
+                        <td>@product.NameRu</td>
+                        <td>@product.DesUz</td>
+                        <td>@product.DesRu</td>
+                        <td>@product.DescriptionUZ</td>
+                        <td>@product.DescriptionRu</td>
+                        <td>@product.SarfUz</td>
+                        <td>@product.SarfRu</td>
+                        <td>
+                            <img src="@product.ProductPicture" alt="Product Picture" width="50" height="50">
+                        </td>
+                        <td>
+                            <img src="@product.ProductIcon" alt="Product Icon" width="30" height="30">
+                        </td>
+                        <td>@product.ProductTwoType</td>
+                        <td>
+                            <a asp-controller="Admin" asp-action="JadvalIkki" asp-route-id="@product.Id" class="btn btn-success modern-btn">Jadval</a>
+                            <a asp-controller="Admin" asp-action="UpdateProductTwo" asp-route-id="@product.Id" class="btn btn-warning modern-btn">Tahrirlash</a>
+                            <form asp-action="DeleteProductTwo" asp-route-id="@product.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this news item?');">
+                                <button type="submit" class="btn btn-danger btn-sm modern-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    index++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="16" class="text-center">No products available</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    .bolimclass {
+        background-color: green;
+    }
+
+    .container {
+        margin: 50px auto;
+        background: #ffffff;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #333;
+        }
+
+        .header .btn-primary {
+            background-color: #007bff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+            .header .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+    .table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        margin-top: 10px;
+    }
+
+        .table th,
+        .table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table th {
+            background-color: #f0f0f0;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .table tr:hover {
+            background-color: #f9f9f9;
+        }
+
+    .btn {
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        font-size: 14px;
+        transition: all 0.3s;
+        display: inline-block;
+        width: 100px;
+        margin-bottom: 8px;
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+        color: #333;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    .modern-btn {
+        font-family: 'Arial', sans-serif;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        text-transform: uppercase;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Success button */
+    .btn-success {
+        background-color: #28a745;
+    }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+    /* Warning button */
+    .btn-warning {
+        background-color: #ffc107;
+        color: #212529;
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+
+    /* Danger button */
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+    /* Inline form style for modern look */
+    form[style*="display:inline;"] {
+        display: inline-block;
+        margin: 5px;
+    }
+
+</style>

@@ -38,29 +38,29 @@
                 <th>Mahsulot Turi</th>
                 <th>Qo'shimcha (O'zbekcha)</th>
                 <th>Qo'shimcha (Ruscha)</th>
-                <th>Amallar</th> <!-- Actions -->
+                <th>Amallar</th> 
             </tr>
         </thead>
         <tbody>
             @foreach (var product in Model)
             {
                 <tr>
-                    <td>@serialNumber</td> <!-- Display serial number -->
+                    <td>@serialNumber</td> 
                     <td>@product.Id</td>
-                    <td>@product.TitleUz</td> <!-- Title in Uzbek -->
-                    <td>@product.TitleRu</td> <!-- Title in Russian -->
-                    <td>@product.DesUz</td> <!-- Description in Uzbek -->
-                    <td>@product.DesRu</td> <!-- Description in Russian -->
-                    <td>@product.DescriptionUz</td> <!-- Full Description in Uzbek -->
-                    <td>@product.DescriptionRu</td> <!-- Full Description in Russian -->
-                    <td>@product.TasirModdaUz</td> <!-- Tasir Modda in Uzbek -->
-                    <td>@product.TasirModdaRu</td> <!-- Tasir Modda in Russian -->
-                    <td>@product.KimyoviySinfiUz</td> <!-- Kimyoviy Sinfi in Uzbek -->
-                    <td>@product.KimyoviySinfiRu</td> <!-- Kimyoviy Sinfi in Russian -->
-                    <td>@product.PreparatShakliUz</td> <!-- Preparat Shakli in Uzbek -->
-                    <td>@product.PreparatShakliRu</td> <!-- Preparat Shakli in Russian -->
-                    <td>@product.QadogiUz</td> <!-- Qadogi in Uzbek -->
-                    <td>@product.QadogiRu</td> <!-- Qadogi in Russian -->
+                    <td>@product.TitleUz</td> 
+                    <td>@product.TitleRu</td> 
+                    <td>@product.DesUz</td> 
+                    <td>@product.DesRu</td> 
+                    <td>@product.DescriptionUz</td> 
+                    <td>@product.DescriptionRu</td> 
+                    <td>@product.TasirModdaUz</td> 
+                    <td>@product.TasirModdaRu</td> 
+                    <td>@product.KimyoviySinfiUz</td> 
+                    <td>@product.KimyoviySinfiRu</td> 
+                    <td>@product.PreparatShakliUz</td>
+                    <td>@product.PreparatShakliRu</td>
+                    <td>@product.QadogiUz</td>
+                    <td>@product.QadogiRu</td>
                     <td>
                         <img src="@product.IconUrl" alt="Icon Rasm" class="img-thumbnail" style="width: 50px; height: 50px;" />
                     </td>
@@ -68,8 +68,8 @@
                         <img src="@product.ProductPicture" alt="Mahsulot Rasm" class="img-thumbnail" style="width: 50px; height: 50px;" />
                     </td>
                     <td>@product.ProductType</td>
-                    <td>@product.AdditionUz</td> <!-- Additional info in Uzbek -->
-                    <td>@product.AdditionRu</td> <!-- Additional info in Russian -->
+                    <td>@product.AdditionUz</td> 
+                    <td>@product.AdditionRu</td> 
                     <td>
                         <a asp-controller="Admin" asp-action="JadvalBir" asp-route-id="@product.Id" class="btn btn-success modern-btn">Jadval</a>
                         <a asp-controller="Admin" asp-action="UpdateProductOne" asp-route-id="@product.Id" class="btn btn-warning modern-btn">Tahrirlash</a>
@@ -80,7 +80,6 @@
 
                 </tr>
                 serialNumber++;
-                <!-- Increment the counter -->
             }
         </tbody>
     </table>

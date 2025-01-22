@@ -5,6 +5,7 @@ using AgroAdmin.Brokers.Storages;
 using AgroAdmin.Models.Foundations.News;
 using AgroAdmin.Models.Foundations.Photos;
 using AgroAdmin.Models.Foundations.ProductOnes;
+using AgroAdmin.Models.Foundations.ProductTwos;
 using AgroAdmin.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -289,6 +290,7 @@ namespace AgroAdmin.Controllers
 
             return RedirectToAction("Photo");
         }
+
 
         [HttpGet]
         public async ValueTask<IActionResult> ProOne()
@@ -601,9 +603,81 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("JadvalBir", new { id = newsItem.ProductOneId });
 
         }
-        public IActionResult ProTwo()
+
+        //======================================================//
+        [HttpGet]
+        public async ValueTask<IActionResult> ProTwo()
+        {
+            var prones = await this.storageBroker.SelectAllProductTwosAsync();
+            return View(prones);
+        }
+        [HttpGet]
+        public async ValueTask<IActionResult> AddProductTwo()
         {
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProductTwo(ProductTwo product, IFormFile productPicture, IFormFile iconUrl)
+        {
+            if (true)
+            {
+                if (productPicture != null && productPicture.Length > 0)
+                {
+                    var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
+
+                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                    if (!Directory.Exists(productPictureDirectory))
+                    {
+                        Directory.CreateDirectory(productPictureDirectory);
+                    }
+
+                    using (var stream = new FileStream(productPicturePath, FileMode.Create))
+                    {
+                        await productPicture.CopyToAsync(stream);
+                    }
+
+                    product.ProductPicture = "/images/" + productPicture.FileName;
+                }
+
+                if (iconUrl != null && iconUrl.Length > 0)
+                {
+                    var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
+
+                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                    if (!Directory.Exists(iconUrlDirectory))
+                    {
+                        Directory.CreateDirectory(iconUrlDirectory);
+                    }
+
+                    using (var stream = new FileStream(iconUrlPath, FileMode.Create))
+                    {
+                        await iconUrl.CopyToAsync(stream);
+                    }
+
+                    product.ProductIcon = "/images/" + iconUrl.FileName;
+                }
+                var newProductTwo = new ProductTwo
+                {
+                    TitleUz = product.TitleUz,
+                    TitleRu = product.TitleRu,
+                    NameUz = product.NameUz, // Map property if available in source
+                    NameRu = product.NameRu, // Map property if available in source
+                    DesUz = product.DesUz,
+                    DesRu = product.DesRu,
+                    DescriptionUZ = product.DescriptionUZ, // Map source property
+                    DescriptionRu = product.DescriptionRu, // Map source property
+                    SarfUz = product.SarfUz, // Map if available
+                    SarfRu = product.SarfRu, // Map if available
+                    ProductPicture = product.ProductPicture,
+                    ProductIcon = product.ProductIcon, // Assuming this maps to ProductIcon
+                    ProductTwoType = product.ProductTwoType, // Ensure type compatibility
+                };
+
+                await this.storageBroker.InsertProductTwoAsync(newProductTwo);
+
+                return RedirectToAction("ProTwo");
+            }
         }
     }
 }
