@@ -14,14 +14,13 @@ namespace AgroAdmin.Controllers
     public class AdminController : Controller
     {
         private readonly IStorageBroker storageBroker;
-        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly string uploadsFolder = "/var/www/files";
+        private readonly string baseUrl = "http://165.22.111.4";
 
         public AdminController(
-            IStorageBroker storageBroker,
-            IWebHostEnvironment webHostEnvironment)
+            IStorageBroker storageBroker)
         {
             this.storageBroker = storageBroker;
-            this.webHostEnvironment = webHostEnvironment;
         }
 
         public ActionResult Index() =>
@@ -48,7 +47,7 @@ namespace AgroAdmin.Controllers
                 if (uploadedImage != null && uploadedImage.Length > 0)
                 {
                     string uniqueFileName = $"{Guid.NewGuid()}_{uploadedImage.FileName}";
-                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                     var directoryPath = Path.GetDirectoryName(filePath);
@@ -62,17 +61,19 @@ namespace AgroAdmin.Controllers
                         await uploadedImage.CopyToAsync(fileStream);
                     }
 
-                    yangilik.NewPicture = $"/images/{uniqueFileName}";
+                    yangilik.NewPicture = $"{baseUrl}/{uniqueFileName}";
                     yangilik.Date = DateTimeOffset.Now;
                 }
 
                 await this.storageBroker.InsertNewAsync(yangilik);
+
                 return RedirectToAction("Yangilik");
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "An error occurred while adding the news item.";
             }
+
             return View();
         }
 
@@ -95,7 +96,7 @@ namespace AgroAdmin.Controllers
                 var fileName = Path.GetFileNameWithoutExtension(uploadedImage.FileName) +
                                "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
 
-                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                // Save file to /var/www/files
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 var directoryPath = Path.GetDirectoryName(filePath);
@@ -109,10 +110,12 @@ namespace AgroAdmin.Controllers
                     await uploadedImage.CopyToAsync(stream);
                 }
 
-                updatedNew.NewPicture = $"/images/{fileName}";
+                // Save the file URL to the database
+                updatedNew.NewPicture = $"{baseUrl}/{fileName}";
             }
             else if (string.IsNullOrEmpty(updatedNew.NewPicture))
             {
+                // Retrieve the existing image if no new image is uploaded
                 var existingNew = await this.storageBroker.SelectNewByIdAsync(updatedNew.Id);
                 if (existingNew != null)
                 {
@@ -126,6 +129,7 @@ namespace AgroAdmin.Controllers
                 return NotFound("News item not found.");
             }
 
+            // Update fields
             existingNewToUpdate.TitleUz = updatedNew.TitleUz;
             existingNewToUpdate.TitleRu = updatedNew.TitleRu;
             existingNewToUpdate.DesUz = updatedNew.DesUz;
@@ -181,7 +185,8 @@ namespace AgroAdmin.Controllers
                 if (uploadedImage != null && uploadedImage.Length > 0)
                 {
                     string uniqueFileName = $"{Guid.NewGuid()}_{uploadedImage.FileName}";
-                    string uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+
+                    // Save file to /var/www/files
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                     var directoryPath = Path.GetDirectoryName(filePath);
@@ -195,16 +200,19 @@ namespace AgroAdmin.Controllers
                         await uploadedImage.CopyToAsync(fileStream);
                     }
 
-                    photo.PictureUrl = $"/images/{uniqueFileName}";
+                    // Update the URL to use the base URL
+                    photo.PictureUrl = $"{baseUrl}/{uniqueFileName}";
                     photo.CreateDate = DateTimeOffset.Now;
                 }
 
                 await this.storageBroker.InsertPhotoAsync(photo);
+                TempData["Message"] = "Photo successfully added!";
                 return RedirectToAction("Photo");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = "An error occurred while adding the news item.";
+                TempData["Error"] = "An error occurred while adding the photo.";
+                // Optionally log the exception for debugging
             }
             return View();
         }
@@ -225,10 +233,11 @@ namespace AgroAdmin.Controllers
 
             if (uploadedImage != null && uploadedImage.Length > 0)
             {
+                // Generate a unique file name
                 var fileName = Path.GetFileNameWithoutExtension(uploadedImage.FileName) +
                                "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
 
-                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                // Save file to /var/www/files
                 var filePath = Path.Combine(uploadsFolder, fileName);
 
                 var directoryPath = Path.GetDirectoryName(filePath);
@@ -237,15 +246,18 @@ namespace AgroAdmin.Controllers
                     Directory.CreateDirectory(directoryPath);
                 }
 
+                // Save the uploaded file
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await uploadedImage.CopyToAsync(stream);
                 }
 
-                updatedPhoto.PictureUrl = $"/images/{fileName}";
+                // Update the PictureUrl with the base URL
+                updatedPhoto.PictureUrl = $"{baseUrl}/{fileName}";
             }
             else if (string.IsNullOrEmpty(updatedPhoto.PictureUrl))
             {
+                // Retain the existing photo URL if no new image is uploaded
                 var existingPhoto = await this.storageBroker.SelectPhotoByIdAsync(updatedPhoto.Id);
                 if (existingPhoto != null)
                 {
@@ -253,12 +265,14 @@ namespace AgroAdmin.Controllers
                 }
             }
 
+            // Retrieve the existing photo from the database
             var existingPhotoToUpdate = await this.storageBroker.SelectPhotoByIdAsync(updatedPhoto.Id);
             if (existingPhotoToUpdate == null)
             {
                 return NotFound("Photo not found.");
             }
 
+            // Update the photo details
             existingPhotoToUpdate.NameUz = updatedPhoto.NameUz;
             existingPhotoToUpdate.NameRu = updatedPhoto.NameRu;
             existingPhotoToUpdate.PictureUrl = updatedPhoto.PictureUrl;
@@ -266,12 +280,14 @@ namespace AgroAdmin.Controllers
 
             try
             {
+                // Save changes to the database
                 await this.storageBroker.UpdatePhotoAsync(existingPhotoToUpdate);
                 TempData["Message"] = "Photo successfully updated!";
             }
             catch (Exception ex)
             {
                 TempData["Error"] = "An error occurred while updating the photo.";
+                // Optionally log the exception for debugging
             }
 
             return RedirectToAction("Photo");
@@ -307,69 +323,73 @@ namespace AgroAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProductOne(ProductOne product, IFormFile productPicture, IFormFile iconUrl)
         {
-            if (true)
+            // Ensure the base directory exists
+            if (!Directory.Exists(uploadsFolder))
             {
-                if (productPicture != null && productPicture.Length > 0)
-                {
-                    var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
-
-                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
-                    if (!Directory.Exists(productPictureDirectory))
-                    {
-                        Directory.CreateDirectory(productPictureDirectory);
-                    }
-
-                    using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                    {
-                        await productPicture.CopyToAsync(stream);
-                    }
-
-                    product.ProductPicture = "/images/" + productPicture.FileName;
-                }
-
-                if (iconUrl != null && iconUrl.Length > 0)
-                {
-                    var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
-
-                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
-                    if (!Directory.Exists(iconUrlDirectory))
-                    {
-                        Directory.CreateDirectory(iconUrlDirectory);
-                    }
-
-                    using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                    {
-                        await iconUrl.CopyToAsync(stream);
-                    }
-
-                    product.IconUrl = "/images/" + iconUrl.FileName;
-                }
-                var newProduct = new ProductOne
-                {
-                    TitleUz = product.TitleUz,
-                    TitleRu = product.TitleRu,
-                    DesUz = product.DesUz,
-                    DesRu = product.DesRu,
-                    DescriptionUz = product.DescriptionUz,
-                    DescriptionRu = product.DescriptionRu,
-                    TasirModdaUz = product.TasirModdaUz,
-                    TasirModdaRu = product.TasirModdaRu,
-                    KimyoviySinfiUz = product.KimyoviySinfiUz,
-                    KimyoviySinfiRu = product.KimyoviySinfiRu,
-                    PreparatShakliUz = product.PreparatShakliUz,
-                    PreparatShakliRu = product.PreparatShakliRu,
-                    QadogiUz = product.QadogiUz,
-                    QadogiRu = product.QadogiRu,
-                    IconUrl = product.IconUrl,
-                    ProductPicture = product.ProductPicture,
-                    ProductType = product.ProductType,
-                    AdditionUz = product.AdditionUz,
-                    AdditionRu = product.AdditionRu
-                };
-                await this.storageBroker.InsertProductOneAsync(newProduct);
-
-                return RedirectToAction("ProOne");
+                Directory.CreateDirectory(uploadsFolder);
             }
+
+            // Save product picture if provided
+            if (productPicture != null && productPicture.Length > 0)
+            {
+                var productPictureFileName = $"{Guid.NewGuid()}_{productPicture.FileName}";
+                var productPicturePath = Path.Combine(uploadsFolder, productPictureFileName);
+
+                // Save the product picture file to the server
+                using (var stream = new FileStream(productPicturePath, FileMode.Create))
+                {
+                    await productPicture.CopyToAsync(stream);
+                }
+
+                // Store the fully qualified URL for the product picture (with base URL)
+                product.ProductPicture = $"{baseUrl}/files/{productPictureFileName}";
+            }
+
+            // Save icon URL if provided
+            if (iconUrl != null && iconUrl.Length > 0)
+            {
+                var iconFileName = $"{Guid.NewGuid()}_{iconUrl.FileName}";
+                var iconUrlPath = Path.Combine(uploadsFolder, iconFileName);
+
+                // Save the icon file to the server
+                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
+                {
+                    await iconUrl.CopyToAsync(stream);
+                }
+
+                // Store the fully qualified URL for the icon (with base URL)
+                product.IconUrl = $"{baseUrl}/files/{iconFileName}";
+            }
+
+            // Create a new product instance and populate it with the product data
+            var newProduct = new ProductOne
+            {
+                TitleUz = product.TitleUz,
+                TitleRu = product.TitleRu,
+                DesUz = product.DesUz,
+                DesRu = product.DesRu,
+                DescriptionUz = product.DescriptionUz,
+                DescriptionRu = product.DescriptionRu,
+                TasirModdaUz = product.TasirModdaUz,
+                TasirModdaRu = product.TasirModdaRu,
+                KimyoviySinfiUz = product.KimyoviySinfiUz,
+                KimyoviySinfiRu = product.KimyoviySinfiRu,
+                PreparatShakliUz = product.PreparatShakliUz,
+                PreparatShakliRu = product.PreparatShakliRu,
+                QadogiUz = product.QadogiUz,
+                QadogiRu = product.QadogiRu,
+                IconUrl = product.IconUrl,
+                ProductPicture = product.ProductPicture,
+                ProductType = product.ProductType,
+                AdditionUz = product.AdditionUz,
+                AdditionRu = product.AdditionRu
+            };
+
+            // Save the new product instance to the database
+            await this.storageBroker.InsertProductOneAsync(newProduct);
+
+            // Redirect to the product listing page (ProOne)
+            return RedirectToAction("ProOne");
         }
 
         [HttpGet]
@@ -400,7 +420,7 @@ namespace AgroAdmin.Controllers
 
             if (productPicture != null && productPicture.Length > 0)
             {
-                var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
+                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
                 var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
                 if (!Directory.Exists(productPictureDirectory))
                 {
@@ -412,7 +432,7 @@ namespace AgroAdmin.Controllers
                     await productPicture.CopyToAsync(stream);
                 }
 
-                product.ProductPicture = "/images/" + productPicture.FileName;
+                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
             }
             else
             {
@@ -421,7 +441,7 @@ namespace AgroAdmin.Controllers
 
             if (iconUrl != null && iconUrl.Length > 0)
             {
-                var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
+                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
                 var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
                 if (!Directory.Exists(iconUrlDirectory))
                 {
@@ -433,7 +453,7 @@ namespace AgroAdmin.Controllers
                     await iconUrl.CopyToAsync(stream);
                 }
 
-                product.IconUrl = "/images/" + iconUrl.FileName;
+                product.IconUrl = $"{baseUrl}/files/{iconUrl.FileName}";
             }
             else
             {
@@ -608,6 +628,7 @@ namespace AgroAdmin.Controllers
             var prones = await this.storageBroker.SelectAllProductTwosAsync();
             return View(prones);
         }
+
         [HttpGet]
         public async ValueTask<IActionResult> AddProductTwo()
         {
@@ -617,64 +638,77 @@ namespace AgroAdmin.Controllers
         [HttpPost]
         public async Task<IActionResult> AddProductTwo(ProductTwo product, IFormFile productPicture, IFormFile iconUrl)
         {
-            if (true)
+            if (product == null)
             {
-                if (productPicture != null && productPicture.Length > 0)
-                {
-                    var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
-
-                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
-                    if (!Directory.Exists(productPictureDirectory))
-                    {
-                        Directory.CreateDirectory(productPictureDirectory);
-                    }
-
-                    using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                    {
-                        await productPicture.CopyToAsync(stream);
-                    }
-
-                    product.ProductPicture = "/images/" + productPicture.FileName;
-                }
-
-                if (iconUrl != null && iconUrl.Length > 0)
-                {
-                    var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
-
-                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
-                    if (!Directory.Exists(iconUrlDirectory))
-                    {
-                        Directory.CreateDirectory(iconUrlDirectory);
-                    }
-
-                    using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                    {
-                        await iconUrl.CopyToAsync(stream);
-                    }
-
-                    product.ProductIcon = "/images/" + iconUrl.FileName;
-                }
-                var newProductTwo = new ProductTwo
-                {
-                    TitleUz = product.TitleUz,
-                    TitleRu = product.TitleRu,
-                    NameUz = product.NameUz, // Map property if available in source
-                    NameRu = product.NameRu, // Map property if available in source
-                    DesUz = product.DesUz,
-                    DesRu = product.DesRu,
-                    DescriptionUZ = product.DescriptionUZ, // Map source property
-                    DescriptionRu = product.DescriptionRu, // Map source property
-                    SarfUz = product.SarfUz, // Map if available
-                    SarfRu = product.SarfRu, // Map if available
-                    ProductPicture = product.ProductPicture,
-                    ProductIcon = product.ProductIcon, // Assuming this maps to ProductIcon
-                    ProductTwoType = product.ProductTwoType, // Ensure type compatibility
-                };
-
-                await this.storageBroker.InsertProductTwoAsync(newProductTwo);
-
-                return RedirectToAction("ProTwo");
+                return BadRequest("Product details are required.");
             }
+
+            // Handle ProductPicture upload
+            if (productPicture != null && productPicture.Length > 0)
+            {
+                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
+                var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+
+                // Ensure the directory exists
+                if (!Directory.Exists(productPictureDirectory))
+                {
+                    Directory.CreateDirectory(productPictureDirectory);
+                }
+
+                // Save the file
+                using (var stream = new FileStream(productPicturePath, FileMode.Create))
+                {
+                    await productPicture.CopyToAsync(stream);
+                }
+
+                // Set the file path with baseUrl for ProductPicture
+                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}"; // Full URL path for accessing the file
+            }
+
+            // Handle IconUrl upload
+            if (iconUrl != null && iconUrl.Length > 0)
+            {
+                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
+                var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+
+                // Ensure the directory exists
+                if (!Directory.Exists(iconUrlDirectory))
+                {
+                    Directory.CreateDirectory(iconUrlDirectory);
+                }
+
+                // Save the file
+                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
+                {
+                    await iconUrl.CopyToAsync(stream);
+                }
+
+                // Set the file path with baseUrl for IconUrl
+                product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}"; // Full URL path for accessing the file
+            }
+
+            // Create a new ProductTwo object and map properties
+            var newProductTwo = new ProductTwo
+            {
+                TitleUz = product.TitleUz,
+                TitleRu = product.TitleRu,
+                NameUz = product.NameUz,
+                NameRu = product.NameRu,
+                DesUz = product.DesUz,
+                DesRu = product.DesRu,
+                DescriptionUZ = product.DescriptionUZ,
+                DescriptionRu = product.DescriptionRu,
+                SarfUz = product.SarfUz,
+                SarfRu = product.SarfRu,
+                ProductPicture = product.ProductPicture,
+                ProductIcon = product.ProductIcon,
+                ProductTwoType = product.ProductTwoType
+            };
+
+            // Save the product to the database
+            await this.storageBroker.InsertProductTwoAsync(newProductTwo);
+
+            return RedirectToAction("ProTwo");
         }
 
         [HttpGet]
@@ -705,8 +739,9 @@ namespace AgroAdmin.Controllers
 
             if (productPicture != null && productPicture.Length > 0)
             {
-                var productPicturePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", productPicture.FileName);
+                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
                 var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+
                 if (!Directory.Exists(productPictureDirectory))
                 {
                     Directory.CreateDirectory(productPictureDirectory);
@@ -717,7 +752,7 @@ namespace AgroAdmin.Controllers
                     await productPicture.CopyToAsync(stream);
                 }
 
-                product.ProductPicture = "/images/" + productPicture.FileName;
+                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
             }
             else
             {
@@ -726,8 +761,9 @@ namespace AgroAdmin.Controllers
 
             if (iconUrl != null && iconUrl.Length > 0)
             {
-                var iconUrlPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", iconUrl.FileName);
+                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
                 var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+
                 if (!Directory.Exists(iconUrlDirectory))
                 {
                     Directory.CreateDirectory(iconUrlDirectory);
@@ -738,7 +774,7 @@ namespace AgroAdmin.Controllers
                     await iconUrl.CopyToAsync(stream);
                 }
 
-                product.ProductIcon = "/images/" + iconUrl.FileName;
+                product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}";
             }
             else
             {
