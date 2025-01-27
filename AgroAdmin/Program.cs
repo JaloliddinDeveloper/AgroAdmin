@@ -4,7 +4,7 @@
 using AgroAdmin.Brokers.Storages;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("http://localhost:5002");
+builder.WebHost.UseUrls("http://localhost:3000");
 
 builder.Services.AddControllersWithViews();
 
