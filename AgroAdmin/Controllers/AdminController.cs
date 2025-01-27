@@ -95,7 +95,6 @@ namespace AgroAdmin.Controllers
                 var fileName = Path.GetFileNameWithoutExtension(uploadedImage.FileName) +
                                "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
 
-                // Faylni /files/ papkasi ichiga saqlash
                 var filePath = Path.Combine(uploadsFolder,fileName);
 
                 var directoryPath = Path.GetDirectoryName(filePath);
@@ -109,12 +108,10 @@ namespace AgroAdmin.Controllers
                     await uploadedImage.CopyToAsync(stream);
                 }
 
-                // Faylning URL'sini to'g'irlash
                 updatedNew.NewPicture = $"{baseUrl}/files/{fileName}";
             }
             else if (string.IsNullOrEmpty(updatedNew.NewPicture))
             {
-                // Agar yangi rasm yuklanmasa, mavjud rasmni olish
                 var existingNew = await this.storageBroker.SelectNewByIdAsync(updatedNew.Id);
                 if (existingNew != null)
                 {
@@ -128,7 +125,6 @@ namespace AgroAdmin.Controllers
                 return NotFound("News item not found.");
             }
 
-            // Yangilash: barcha kerakli maydonlarni yangilash
             existingNewToUpdate.TitleUz = updatedNew.TitleUz;
             existingNewToUpdate.TitleRu = updatedNew.TitleRu;
             existingNewToUpdate.DesUz = updatedNew.DesUz;
@@ -202,12 +198,10 @@ namespace AgroAdmin.Controllers
                         await uploadedImage.CopyToAsync(fileStream);
                     }
 
-                    // Fayl URL'sini to'g'irlash
                     photo.PictureUrl = $"{baseUrl}/files/{uniqueFileName}";
                     photo.CreateDate = DateTimeOffset.Now;
                 }
 
-                // Ma'lumotni bazaga kiritish
                 await this.storageBroker.InsertPhotoAsync(photo);
                 TempData["Message"] = "Rasm muvaffaqiyatli qo'shildi!";
                 return RedirectToAction("Photo");
@@ -215,8 +209,6 @@ namespace AgroAdmin.Controllers
             catch (Exception ex)
             {
                 TempData["Error"] = "Rasmni qo'shishda xatolik yuz berdi.";
-                // Xatolikni kuzatish uchun logging
-                // Log.Error("Error adding photo", ex);
             }
 
             return View();
@@ -332,23 +324,19 @@ namespace AgroAdmin.Controllers
         {
             try
             {
-                // Ensure the base directory exists
-                if (!Directory.Exists(uploadsFolder))
+                if (product == null)
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    return BadRequest("Product details are required.");
                 }
 
-                // Save product picture if provided
                 if (productPicture != null && productPicture.Length > 0)
                 {
-                    var productPictureFileName = $"{Guid.NewGuid()}_{productPicture.FileName}";
-                    var productPicturePath = Path.Combine(uploadsFolder,productPictureFileName);
+                    var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
+                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
 
-                    // Save the product picture file to the server
-                    var directoryPath = Path.GetDirectoryName(productPicturePath);
-                    if (!Directory.Exists(directoryPath))
+                    if (!Directory.Exists(productPictureDirectory))
                     {
-                        Directory.CreateDirectory(directoryPath);
+                        Directory.CreateDirectory(productPictureDirectory);
                     }
 
                     using (var stream = new FileStream(productPicturePath, FileMode.Create))
@@ -356,21 +344,17 @@ namespace AgroAdmin.Controllers
                         await productPicture.CopyToAsync(stream);
                     }
 
-                    // Store the fully qualified URL for the product picture (with base URL)
-                    product.ProductPicture = $"{baseUrl}/files/{productPictureFileName}";
+                    product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}"; // Full URL path for accessing the file
                 }
 
-                // Save icon URL if provided
                 if (iconUrl != null && iconUrl.Length > 0)
                 {
-                    var iconFileName = $"{Guid.NewGuid()}_{iconUrl.FileName}";
-                    var iconUrlPath = Path.Combine(uploadsFolder, "files", iconFileName);
+                    var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
+                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
 
-                    // Save the icon file to the server
-                    var directoryPath = Path.GetDirectoryName(iconUrlPath);
-                    if (!Directory.Exists(directoryPath))
+                    if (!Directory.Exists(iconUrlDirectory))
                     {
-                        Directory.CreateDirectory(directoryPath);
+                        Directory.CreateDirectory(iconUrlDirectory);
                     }
 
                     using (var stream = new FileStream(iconUrlPath, FileMode.Create))
@@ -378,11 +362,9 @@ namespace AgroAdmin.Controllers
                         await iconUrl.CopyToAsync(stream);
                     }
 
-                    // Store the fully qualified URL for the icon (with base URL)
-                    product.IconUrl = $"{baseUrl}/files/{iconFileName}";
+                    product.IconUrl = $"{baseUrl}/files/{iconUrl.FileName}";
                 }
 
-                // Create a new product instance and populate it with the product data
                 var newProduct = new ProductOne
                 {
                     TitleUz = product.TitleUz,
@@ -406,11 +388,9 @@ namespace AgroAdmin.Controllers
                     AdditionRu = product.AdditionRu
                 };
 
-                // Save the new product instance to the database
                 await this.storageBroker.InsertProductOneAsync(newProduct);
 
                 TempData["Message"] = "Product successfully added!";
-                // Redirect to the product listing page (ProOne)
                 return RedirectToAction("ProOne");
             }
             catch (Exception ex)
@@ -442,17 +422,18 @@ namespace AgroAdmin.Controllers
                 return BadRequest();
             }
 
+
             var existingProduct = await this.storageBroker.SelectProductOneByIdAsync(id);
             if (existingProduct == null)
             {
                 return NotFound();
             }
 
-            // Produkt rasmni yangilash
             if (productPicture != null && productPicture.Length > 0)
             {
                 var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
                 var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+
                 if (!Directory.Exists(productPictureDirectory))
                 {
                     Directory.CreateDirectory(productPictureDirectory);
@@ -463,7 +444,6 @@ namespace AgroAdmin.Controllers
                     await productPicture.CopyToAsync(stream);
                 }
 
-                // URL-ni yangilash
                 product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
             }
             else
@@ -471,30 +451,33 @@ namespace AgroAdmin.Controllers
                 product.ProductPicture = existingProduct.ProductPicture;
             }
 
-            // Ikonani yangilash
+
             if (iconUrl != null && iconUrl.Length > 0)
             {
                 var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
                 var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+
+
                 if (!Directory.Exists(iconUrlDirectory))
                 {
                     Directory.CreateDirectory(iconUrlDirectory);
                 }
+
 
                 using (var stream = new FileStream(iconUrlPath, FileMode.Create))
                 {
                     await iconUrl.CopyToAsync(stream);
                 }
 
-                // Ikona URL-ni yangilash
+
                 product.IconUrl = $"{baseUrl}/files/{iconUrl.FileName}";
             }
             else
             {
+
                 product.IconUrl = existingProduct.IconUrl;
             }
 
-            // Boshqa ma'lumotlarni yangilash
             existingProduct.TitleUz = product.TitleUz;
             existingProduct.TitleRu = product.TitleRu;
             existingProduct.DesUz = product.DesUz;
@@ -515,10 +498,8 @@ namespace AgroAdmin.Controllers
             existingProduct.AdditionUz = product.AdditionUz;
             existingProduct.AdditionRu = product.AdditionRu;
 
-            // Yangilanishlarni saqlash
             await this.storageBroker.UpdateProductOneAsync(existingProduct);
 
-            // Mahsulotlar ro'yxatiga qaytish
             return RedirectToAction("ProOne");
         }
 
@@ -578,7 +559,6 @@ namespace AgroAdmin.Controllers
         [HttpPost]
         public async ValueTask<IActionResult> AddJadvalBir(TableOne tableOne)
         {
-
             var tableOneTrue = new TableOne
             {
                 EkinTuriUz = tableOne.EkinTuriUz,
@@ -680,51 +660,42 @@ namespace AgroAdmin.Controllers
                 return BadRequest("Product details are required.");
             }
 
-            // Handle ProductPicture upload
             if (productPicture != null && productPicture.Length > 0)
             {
                 var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
                 var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
 
-                // Ensure the directory exists
                 if (!Directory.Exists(productPictureDirectory))
                 {
                     Directory.CreateDirectory(productPictureDirectory);
                 }
 
-                // Save the file
                 using (var stream = new FileStream(productPicturePath, FileMode.Create))
                 {
                     await productPicture.CopyToAsync(stream);
                 }
 
-                // Set the file path with baseUrl for ProductPicture
                 product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}"; // Full URL path for accessing the file
             }
 
-            // Handle IconUrl upload
             if (iconUrl != null && iconUrl.Length > 0)
             {
                 var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
                 var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
 
-                // Ensure the directory exists
                 if (!Directory.Exists(iconUrlDirectory))
                 {
                     Directory.CreateDirectory(iconUrlDirectory);
                 }
 
-                // Save the file
                 using (var stream = new FileStream(iconUrlPath, FileMode.Create))
                 {
                     await iconUrl.CopyToAsync(stream);
                 }
 
-                // Set the file path with baseUrl for IconUrl
                 product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}"; // Full URL path for accessing the file
             }
 
-            // Create a new ProductTwo object and map properties
             var newProductTwo = new ProductTwo
             {
                 TitleUz = product.TitleUz,
@@ -742,7 +713,6 @@ namespace AgroAdmin.Controllers
                 ProductTwoType = product.ProductTwoType
             };
 
-            // Save the product to the database
             await this.storageBroker.InsertProductTwoAsync(newProductTwo);
 
             return RedirectToAction("ProTwo");
@@ -763,74 +733,68 @@ namespace AgroAdmin.Controllers
         [HttpPost]
         public async ValueTask<IActionResult> UpdateProductTwo(int id, ProductTwo product, IFormFile productPicture, IFormFile iconUrl)
         {
-            // 1. Tekshiruv: id va product Id mosligini ta'minlash
             if (id != product.Id)
             {
-                return BadRequest(); // Agar id mos kelmasa, BadRequest qaytariladi
+                return BadRequest(); 
             }
 
-            // 2. Mahsulotni topish: mavjud mahsulotni olish
+         
             var existingProduct = await this.storageBroker.SelectProductTwoByIdAsync(id);
             if (existingProduct == null)
             {
-                return NotFound(); // Agar mahsulot topilmasa, NotFound qaytariladi
+                return NotFound();
             }
 
-            // 3. ProductPicture rasmni yuklash
             if (productPicture != null && productPicture.Length > 0)
             {
                 var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
                 var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
 
-                // Faylni saqlash uchun direktoriyani yaratish
                 if (!Directory.Exists(productPictureDirectory))
                 {
                     Directory.CreateDirectory(productPictureDirectory);
                 }
 
-                // Faylni saqlash
                 using (var stream = new FileStream(productPicturePath, FileMode.Create))
                 {
                     await productPicture.CopyToAsync(stream);
                 }
 
-                // Rasm URL manzilini yangilash
                 product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
             }
             else
             {
-                // Agar rasm yuklanmasa, eski manzilni saqlash
                 product.ProductPicture = existingProduct.ProductPicture;
             }
 
-            // 4. IconUrl rasmni yuklash
+         
             if (iconUrl != null && iconUrl.Length > 0)
             {
                 var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
                 var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
 
-                // Faylni saqlash uchun direktoriyani yaratish
+                
                 if (!Directory.Exists(iconUrlDirectory))
                 {
                     Directory.CreateDirectory(iconUrlDirectory);
                 }
 
-                // Faylni saqlash
+              
                 using (var stream = new FileStream(iconUrlPath, FileMode.Create))
                 {
                     await iconUrl.CopyToAsync(stream);
                 }
 
-                // Ikonka URL manzilini yangilash
+               
                 product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}";
             }
             else
             {
-                // Agar ikonka yuklanmasa, eski manzilni saqlash
+                
                 product.ProductIcon = existingProduct.ProductIcon;
             }
 
-            // 5. Barcha ma'lumotlarni yangilash
+           
             existingProduct.TitleUz = product.TitleUz;
             existingProduct.TitleRu = product.TitleRu;
             existingProduct.NameUz = product.NameUz;
@@ -845,10 +809,7 @@ namespace AgroAdmin.Controllers
             existingProduct.ProductIcon = product.ProductIcon;
             existingProduct.ProductTwoType = product.ProductTwoType;
 
-            // 6. Yangilangan mahsulotni bazaga saqlash
             await this.storageBroker.UpdateProductTwoAsync(existingProduct);
-
-            // 7. ProTwo sahifasiga yo'naltirish
             return RedirectToAction("ProTwo");
         }
 
