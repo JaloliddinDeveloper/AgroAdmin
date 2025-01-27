@@ -291,7 +291,6 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("Photo");
         }
 
-
         [HttpGet]
         public async ValueTask<IActionResult> ProOne()
         {
@@ -587,7 +586,6 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("JadvalBir", new { id = tableOne.ProductOneId });
         }
 
-
         [HttpPost]
         public async ValueTask<IActionResult> DeleteJadvalBir(int id)
         {
@@ -799,6 +797,92 @@ namespace AgroAdmin.Controllers
             };
 
             return View(viewModel);
+        }
+
+        public async Task<IActionResult> AddJadvalIkki(int id)
+        {
+            var proTwo = await this.storageBroker.SelectProductTwoByIdAsync(id);
+
+            if (proTwo == null)
+            {
+                return NotFound();
+            }
+
+            var word = new TableTwo
+            {
+                ProductTwoId = proTwo.Id
+            };
+            return View(word);
+        }
+
+        [HttpPost]
+        public async ValueTask<IActionResult> AddJadvalIkki(TableTwo tableTwo)
+        {
+
+            var tableOneTrue = new TableTwo
+            {
+               NameUz = tableTwo.NameUz,
+               NameRu= tableTwo.NameRu,
+               Foiz= tableTwo.Foiz,
+               ProductTwoId= tableTwo.ProductTwoId,
+            };
+
+            await this.storageBroker.InsertTableTwoAsync(tableOneTrue);
+
+            return RedirectToAction("JadvalIkki", new { id = tableTwo.ProductTwoId });
+        }
+
+        public async Task<IActionResult> EditJadvalIkki(int id)
+        {
+            var tableTwo = await this.storageBroker.SelectTableTwoByIdAsync(id);
+
+            if (tableTwo == null)
+            {
+                return NotFound();
+            }
+
+            return View(tableTwo);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditJadvalIkki(int id, TableTwo tableTwo)
+        {
+            if (id != tableTwo.Id)
+            {
+                return NotFound();
+            }
+
+            var existingTableTwo = await this.storageBroker.SelectTableTwoByIdAsync(id);
+
+            if (existingTableTwo == null)
+            {
+                return NotFound();
+            }
+
+            existingTableTwo.NameUz = tableTwo.NameUz;
+            existingTableTwo.NameRu = tableTwo.NameRu;
+            existingTableTwo.Foiz = tableTwo.Foiz;
+            existingTableTwo.ProductTwoId = tableTwo.ProductTwoId;
+          
+
+
+            await this.storageBroker.UpdateTableTwoAsync(existingTableTwo);
+
+            return RedirectToAction("JadvalIkki", new { id = tableTwo.ProductTwoId });
+        }
+
+        [HttpPost]
+        public async ValueTask<IActionResult> DeleteIkki(int id)
+        {
+            var newsItem = await this.storageBroker.SelectTableTwoByIdAsync(id);
+            if (newsItem == null)
+            {
+                return NotFound();
+            }
+
+            await this.storageBroker.DeleteTableTwoAsync(newsItem);
+
+            return RedirectToAction("JadvalIkki", new { id = newsItem.ProductTwoId });
         }
     }
 }
