@@ -1,0 +1,170 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductTwos
+@model ProductTwo
+
+@{
+    ViewData["Title"] = "Update Product";
+}
+
+<style>
+
+    form {
+        max-width: 800px;
+        margin: auto;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        font-family: 'Arial', sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input.form-control, textarea.form-control, select.form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+
+        input.form-control:focus, textarea.form-control:focus, select.form-control:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+    button.btn-primary {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        button.btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 12px;
+    }
+
+    (max-width: 600px) {
+        form
+
+    {
+        padding: 15px;
+    }
+
+    button.btn-primary {
+        font-size: 14px;
+    }
+
+    }
+</style>
+
+<h2>Update Product</h2>
+
+<form asp-action="UpdateProductTwo" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="TitleUz"></label>
+        <input asp-for="TitleUz" class="form-control" required />
+        <span asp-validation-for="TitleUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="TitleRu"></label>
+        <input asp-for="TitleRu" class="form-control" required />
+        <span asp-validation-for="TitleRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NameUz"></label>
+        <input asp-for="NameUz" class="form-control" />
+        <span asp-validation-for="NameUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="NameRu"></label>
+        <input asp-for="NameRu" class="form-control" />
+        <span asp-validation-for="NameRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DesUz"></label>
+        <textarea asp-for="DesUz" class="form-control"></textarea>
+        <span asp-validation-for="DesUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DesRu"></label>
+        <textarea asp-for="DesRu" class="form-control"></textarea>
+        <span asp-validation-for="DesRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DescriptionUZ"></label>
+        <textarea asp-for="DescriptionUZ" class="form-control"></textarea>
+        <span asp-validation-for="DescriptionUZ" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="DescriptionRu"></label>
+        <textarea asp-for="DescriptionRu" class="form-control"></textarea>
+        <span asp-validation-for="DescriptionRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SarfUz"></label>
+        <textarea asp-for="SarfUz" class="form-control"></textarea>
+        <span asp-validation-for="SarfUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SarfRu"></label>
+        <textarea asp-for="SarfRu" class="form-control"></textarea>
+        <span asp-validation-for="SarfRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductPicture"></label>
+        <input asp-for="ProductPicture" type="file" class="form-control" />
+        @if (!string.IsNullOrEmpty(Model.ProductPicture))
+        {
+            <img src="@Model.ProductPicture" alt="Product Picture" class="img-thumbnail mt-2" style="max-width: 150px;" />
+        }
+        <span asp-validation-for="ProductPicture" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductIcon">Upload New Icon</label>
+        <input asp-for="ProductIcon" type="file" class="form-control" name="iconUrl" />
+        <span asp-validation-for="ProductIcon" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductTwoType"></label>
+        <select asp-for="ProductTwoType" class="form-control" asp-items="Html.GetEnumSelectList<ProductTwoType>()"></select>
+        <span asp-validation-for="ProductTwoType" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a asp-action="ProTwo" class="btn btn-secondary">Cancel</a>
+</form>
