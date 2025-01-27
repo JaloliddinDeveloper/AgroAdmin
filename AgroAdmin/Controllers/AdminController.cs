@@ -15,7 +15,7 @@ namespace AgroAdmin.Controllers
     {
         private readonly IStorageBroker storageBroker;
         private readonly string uploadsFolder = "/var/www/files";
-        private readonly string baseUrl = "http://68.183.228.69";
+        private readonly string baseUrl = "http://159.89.199.17";
 
         public AdminController(
             IStorageBroker storageBroker)
