@@ -60,7 +60,7 @@ namespace AgroAdmin.Controllers
                         await uploadedImage.CopyToAsync(fileStream);
                     }
 
-                    yangilik.NewPicture = $"{baseUrl}/files/{uniqueFileName}";
+                    yangilik.NewPicture = $"{baseUrl}/{uniqueFileName}";
                     yangilik.Date = DateTimeOffset.Now;
                 }
 
@@ -110,7 +110,7 @@ namespace AgroAdmin.Controllers
                 }
 
                 // Faylning URL'sini to'g'irlash
-                updatedNew.NewPicture = $"{baseUrl}/files/{fileName}";
+                updatedNew.NewPicture = $"{baseUrl}/{fileName}";
             }
             else if (string.IsNullOrEmpty(updatedNew.NewPicture))
             {
