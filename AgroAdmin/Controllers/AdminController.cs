@@ -47,7 +47,7 @@ namespace AgroAdmin.Controllers
                 {
                     string uniqueFileName = $"{Guid.NewGuid()}_{uploadedImage.FileName}";
 
-                    string filePath = Path.Combine(uploadsFolder, "files", uniqueFileName);
+                    string filePath = Path.Combine(uploadsFolder,uniqueFileName);
 
                     var directoryPath = Path.GetDirectoryName(filePath);
                     if (!Directory.Exists(directoryPath))
@@ -60,7 +60,7 @@ namespace AgroAdmin.Controllers
                         await uploadedImage.CopyToAsync(fileStream);
                     }
 
-                    yangilik.NewPicture = $"{baseUrl}/{uniqueFileName}";
+                    yangilik.NewPicture = $"{baseUrl}/files/{uniqueFileName}";
                     yangilik.Date = DateTimeOffset.Now;
                 }
 
@@ -96,7 +96,7 @@ namespace AgroAdmin.Controllers
                                "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
 
                 // Faylni /files/ papkasi ichiga saqlash
-                var filePath = Path.Combine(uploadsFolder, "files", fileName);
+                var filePath = Path.Combine(uploadsFolder,fileName);
 
                 var directoryPath = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(directoryPath))
@@ -110,7 +110,7 @@ namespace AgroAdmin.Controllers
                 }
 
                 // Faylning URL'sini to'g'irlash
-                updatedNew.NewPicture = $"{baseUrl}/{fileName}";
+                updatedNew.NewPicture = $"{baseUrl}/files/{fileName}";
             }
             else if (string.IsNullOrEmpty(updatedNew.NewPicture))
             {
@@ -188,7 +188,7 @@ namespace AgroAdmin.Controllers
                     string uniqueFileName = $"{Guid.NewGuid()}_{uploadedImage.FileName}";
 
                     // Faylni /files/ papkaga saqlash
-                    string filePath = Path.Combine(uploadsFolder, "files", uniqueFileName);
+                    string filePath = Path.Combine(uploadsFolder,uniqueFileName);
 
                     var directoryPath = Path.GetDirectoryName(filePath);
                     if (!Directory.Exists(directoryPath))
@@ -244,7 +244,7 @@ namespace AgroAdmin.Controllers
                                "_" + Guid.NewGuid().ToString() + Path.GetExtension(uploadedImage.FileName);
 
                 // Faylni /files/ papkaga saqlash
-                var filePath = Path.Combine(uploadsFolder, "files", fileName);
+                var filePath = Path.Combine(uploadsFolder,fileName);
 
                 var directoryPath = Path.GetDirectoryName(filePath);
                 if (!Directory.Exists(directoryPath))
@@ -342,7 +342,7 @@ namespace AgroAdmin.Controllers
                 if (productPicture != null && productPicture.Length > 0)
                 {
                     var productPictureFileName = $"{Guid.NewGuid()}_{productPicture.FileName}";
-                    var productPicturePath = Path.Combine(uploadsFolder, "files", productPictureFileName);
+                    var productPicturePath = Path.Combine(uploadsFolder,productPictureFileName);
 
                     // Save the product picture file to the server
                     var directoryPath = Path.GetDirectoryName(productPicturePath);
