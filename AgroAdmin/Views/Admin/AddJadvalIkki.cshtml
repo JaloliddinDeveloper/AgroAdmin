@@ -1,0 +1,94 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using AgroAdmin.Models.Foundations.ProductTwos
+@model TableTwo
+
+<style>
+
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 14px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+    form {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 100%;
+        max-width: 600px;
+        align-items: center;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="number"], input[type="hidden"] {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+    }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: #4CAF50;
+            background-color: #fff;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+        }
+
+    span.text-danger {
+        font-size: 12px;
+        color: #e74c3c;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+</style>
+
+<form asp-action="AddJadvalIkki" method="post">
+    <div class="form-group">
+        <label for="NameUz">Name (Uz)</label>
+        <input asp-for="NameUz" class="form-control" id="NameUz" required />
+        <span asp-validation-for="NameUz" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="NameRu">Name (Ru)</label>
+        <input asp-for="NameRu" class="form-control" id="NameRu" required />
+        <span asp-validation-for="NameRu" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Foiz">Foiz</label>
+        <input asp-for="Foiz" class="form-control" id="Foiz" required />
+        <span asp-validation-for="Foiz" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" name="ProductTwoId" value="@Model.ProductTwoId" />
+
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+

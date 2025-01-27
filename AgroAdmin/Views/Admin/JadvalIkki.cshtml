@@ -8,7 +8,7 @@
 <div class="toolbar">
     <button class="toolbar-heading">@Model.ProductTwoName</button>
     <div class="toolbar-buttons">
-        <a href="@Url.Action("AddJadvalBir", "Admin", new { id = Model.ProuctTwoId })" class="btn-add-words">
+        <a href="@Url.Action("AddJadvalIkki", "Admin", new { id = Model.ProuctTwoId })" class="btn-add-words">
             <span class="icon">+</span> Add Words
         </a>
         <a href="@Url.Action("ProTwo")" class="btn-back">Orqaga</a>
@@ -24,7 +24,7 @@
             <th>Name (Uz)</th>
             <th>Name (Ru)</th>
             <th>Foiz</th>
-            <th>Product Two ID</th>
+         @*    <th>Product Two ID</th> *@
             <th>Actions</th>
         </tr>
     </thead>
@@ -36,10 +36,10 @@
                 <td>@item.NameUz</td>
                 <td>@item.NameRu</td>
                 <td>@item.Foiz</td>
-                <td>@item.ProductTwoId</td>
+              @*   <td>@item.ProductTwoId</td> *@
                 <td>
-                    <a href="@Url.Action("UpdateJadOne", "Admin", new { id = item.Id })" class="btn btn-primary">Edit</a>
-                    <form asp-action="DeleteJadOne" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <a href="@Url.Action("EditJadvalIkki", "Admin", new { id = item.Id })" class="btn btn-primary">Edit</a>
+                    <form asp-action="DeleteIkki" asp-route-id="@item.Id" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this item?');">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                     </form>
                 </td>
