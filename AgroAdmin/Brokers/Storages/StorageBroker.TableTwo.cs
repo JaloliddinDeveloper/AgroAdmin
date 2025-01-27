@@ -5,6 +5,7 @@ using AgroAdmin.Models.Foundations.ProductTwos;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using AgroAdmin.Models.Foundations.ProductOnes;
 
 namespace AgroAdmin.Brokers.Storages
 {
@@ -26,5 +27,12 @@ namespace AgroAdmin.Brokers.Storages
         
         public async ValueTask<TableTwo> DeleteTableTwoAsync(TableTwo tableTwo)=>
             await DeleteAsync(tableTwo);
+
+        public async Task<IEnumerable<TableTwo>> GetTableTwosProOneByIdAsync(int proTwoId)
+        {
+            return await this.TableTwos
+                .Where(b => b.ProductTwoId == proTwoId)
+                .ToListAsync();
+        }
     }
 }

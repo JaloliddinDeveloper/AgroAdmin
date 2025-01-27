@@ -466,7 +466,6 @@ namespace AgroAdmin.Controllers
             return RedirectToAction("ProOne");
         }
 
-
         [HttpPost]
         public async ValueTask<IActionResult> DeleteProductOne(int id)
         {
@@ -779,6 +778,27 @@ namespace AgroAdmin.Controllers
             await this.storageBroker.DeleteProductTwoAsync(newsItem);
 
             return RedirectToAction("ProTwo");
+        }
+
+        public async Task<IActionResult> JadvalIkki(int id)
+        {
+            var proTwo = await this.storageBroker.SelectProductTwoByIdAsync(id);
+
+            if (proTwo == null)
+            {
+                return NotFound();
+            }
+
+            var jadvallar = await storageBroker.GetTableTwosProOneByIdAsync(id);
+
+            var viewModel = new TableTwoPageViewModel
+            {
+                ProuctTwoId = proTwo.Id,
+                ProductTwoName = proTwo.TitleUz,
+                TableTwoes = jadvallar
+            };
+
+            return View(viewModel);
         }
     }
 }
