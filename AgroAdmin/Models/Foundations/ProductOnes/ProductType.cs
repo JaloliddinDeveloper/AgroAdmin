@@ -5,12 +5,12 @@ namespace AgroAdmin.Models.Foundations.ProductOnes
 {
     public enum ProductType
     {
-        Гербицидлар = 1,
-        Фунгицидлар = 2,
-        Инсектоакарацидлар,
-        Дефолиантлар,
-        Сиртфаолмодда,
-        Уруғдорилагичлар,
-        Ўсимликларнипрепаратлар
+        Gerbitsidlar = 1,
+        Fungitsidlar = 2,
+        Insektoakaratsidlar,
+        Defoliantlar,
+        Sirtfaolmodda,
+        Urugʻdorilagichlar,
+        Oʻsimliklarnipreparatlar
     }
 }

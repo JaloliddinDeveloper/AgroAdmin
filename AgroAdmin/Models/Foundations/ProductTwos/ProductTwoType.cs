@@ -2,8 +2,8 @@
 {
     public enum ProductTwoType
     {
-        Биостимулятор = 1,
-        Микроэлемент = 2,
-        Нпк = 3
+        Biostimulyator = 1,
+        Mikroelement = 2,
+        Npk = 3
     }
 }
