@@ -1,7 +1,4 @@
-﻿// ---------------------------------------------------------------------------------- 
-// Copyright (c) The Standard Organization, a coalition of the Good-Hearted Engineers 
-// ----------------------------------------------------------------------------------
-using AgroAdmin.Models.Foundations.ProductTwos;
+﻿using AgroAdmin.Models.Foundations.ProductTwos;
 
 namespace AgroAdmin.Models.ViewModels
 {

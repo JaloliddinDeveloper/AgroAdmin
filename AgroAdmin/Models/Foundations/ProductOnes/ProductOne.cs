@@ -1,6 +1,8 @@
 ﻿// ---------------------------------------------------------------------------------- 
 // Copyright (c) The Standard Organization, a coalition of the Good-Hearted Engineers 
 // ----------------------------------------------------------------------------------
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace AgroAdmin.Models.Foundations.ProductOnes
 {
@@ -23,10 +25,9 @@ namespace AgroAdmin.Models.Foundations.ProductOnes
         public string QadogiRu { get; set; }
         public string IconUrl { get; set; } 
         public string ProductPicture { get; set; }
+        public string ProductOneName { get; set; }
         public ProductType ProductType { get; set; }
-        public string AdditionUz { get; set; }    
-        public string AdditionRu { get; set; }    
+        [JsonIgnore]
         public List<TableOne> TableOnes { get; set; }  
     }
 }
-                 

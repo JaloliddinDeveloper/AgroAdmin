@@ -36,8 +36,7 @@
                 <th>Icon URL</th>
                 <th>Rasm</th>
                 <th>Mahsulot Turi</th>
-                <th>Qo'shimcha (O'zbekcha)</th>
-                <th>Qo'shimcha (Ruscha)</th>
+                <th>ProductName</th>
                 <th>Amallar</th> 
             </tr>
         </thead>
@@ -68,8 +67,7 @@
                         <img src="@product.ProductPicture" alt="Mahsulot Rasm" class="img-thumbnail" style="width: 50px; height: 50px;" />
                     </td>
                     <td>@product.ProductType</td>
-                    <td>@product.AdditionUz</td> 
-                    <td>@product.AdditionRu</td> 
+                    <td>@product.ProductOneName</td> 
                     <td>
                         <a asp-controller="Admin" asp-action="JadvalBir" asp-route-id="@product.Id" class="btn btn-success modern-btn">Jadval</a>
                         <a asp-controller="Admin" asp-action="UpdateProductOne" asp-route-id="@product.Id" class="btn btn-warning modern-btn">Tahrirlash</a>

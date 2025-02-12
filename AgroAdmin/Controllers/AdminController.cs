@@ -384,8 +384,7 @@ namespace AgroAdmin.Controllers
                     IconUrl = product.IconUrl,
                     ProductPicture = product.ProductPicture,
                     ProductType = product.ProductType,
-                    AdditionUz = product.AdditionUz,
-                    AdditionRu = product.AdditionRu
+                    ProductOneName = product.ProductOneName,
                 };
 
                 await this.storageBroker.InsertProductOneAsync(newProduct);
@@ -495,8 +494,7 @@ namespace AgroAdmin.Controllers
             existingProduct.ProductPicture = product.ProductPicture;
             existingProduct.IconUrl = product.IconUrl;
             existingProduct.ProductType = product.ProductType;
-            existingProduct.AdditionUz = product.AdditionUz;
-            existingProduct.AdditionRu = product.AdditionRu;
+            existingProduct.ProductOneName = product.ProductOneName;
 
             await this.storageBroker.UpdateProductOneAsync(existingProduct);
 
