@@ -326,43 +326,46 @@ namespace AgroAdmin.Controllers
             {
                 if (product == null)
                 {
-                    return BadRequest("Product details are required.");
+                    return BadRequest("Product data is missing.");
+                }
+
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
                 }
 
                 if (productPicture != null && productPicture.Length > 0)
                 {
-                    var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
-                    var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                    string fileName = $"{Guid.NewGuid()}{Path.GetExtension(productPicture.FileName)}";
+                    string filePath = Path.Combine(uploadsFolder, fileName);
 
-                    if (!Directory.Exists(productPictureDirectory))
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        Directory.CreateDirectory(productPictureDirectory);
+                        await productPicture.CopyToAsync(fileStream);
                     }
 
-                    using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                    {
-                        await productPicture.CopyToAsync(stream);
-                    }
-
-                    product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}"; // Full URL path for accessing the file
+                    product.ProductPicture = $"{baseUrl}/files/{fileName}";
+                }
+                else
+                {
+                    return BadRequest("Product picture is required.");
                 }
 
                 if (iconUrl != null && iconUrl.Length > 0)
                 {
-                    var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
-                    var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                    string iconFileName = $"{Guid.NewGuid()}{Path.GetExtension(iconUrl.FileName)}";
+                    string iconFilePath = Path.Combine(uploadsFolder, iconFileName);
 
-                    if (!Directory.Exists(iconUrlDirectory))
+                    using (var iconStream = new FileStream(iconFilePath, FileMode.Create))
                     {
-                        Directory.CreateDirectory(iconUrlDirectory);
+                        await iconUrl.CopyToAsync(iconStream);
                     }
 
-                    using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                    {
-                        await iconUrl.CopyToAsync(stream);
-                    }
-
-                    product.IconUrl = $"{baseUrl}/files/{iconUrl.FileName}";
+                    product.IconUrl = $"{baseUrl}/files/{iconFileName}";
+                }
+                else
+                {
+                    return BadRequest("Icon is required.");
                 }
 
                 var newProduct = new ProductOne
@@ -655,43 +658,46 @@ namespace AgroAdmin.Controllers
         {
             if (product == null)
             {
-                return BadRequest("Product details are required.");
+                return BadRequest("Product data is missing.");
+            }
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
             }
 
             if (productPicture != null && productPicture.Length > 0)
             {
-                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
-                var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                string fileName = $"{Guid.NewGuid()}{Path.GetExtension(productPicture.FileName)}";
+                string filePath = Path.Combine(uploadsFolder, fileName);
 
-                if (!Directory.Exists(productPictureDirectory))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(productPictureDirectory);
+                    await productPicture.CopyToAsync(fileStream);
                 }
 
-                using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                {
-                    await productPicture.CopyToAsync(stream);
-                }
-
-                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}"; // Full URL path for accessing the file
+                product.ProductPicture = $"{baseUrl}/files/{fileName}";
+            }
+            else
+            {
+                return BadRequest("Product picture is required.");
             }
 
             if (iconUrl != null && iconUrl.Length > 0)
             {
-                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
-                var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                string iconFileName = $"{Guid.NewGuid()}{Path.GetExtension(iconUrl.FileName)}";
+                string iconFilePath = Path.Combine(uploadsFolder, iconFileName);
 
-                if (!Directory.Exists(iconUrlDirectory))
+                using (var iconStream = new FileStream(iconFilePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(iconUrlDirectory);
+                    await iconUrl.CopyToAsync(iconStream);
                 }
 
-                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                {
-                    await iconUrl.CopyToAsync(stream);
-                }
-
-                product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}"; // Full URL path for accessing the file
+                product.ProductIcon = $"{baseUrl}/files/{iconFileName}";
+            }
+            else
+            {
+                return BadRequest("Icon is required.");
             }
 
             var newProductTwo = new ProductTwo
