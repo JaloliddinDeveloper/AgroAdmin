@@ -17,7 +17,6 @@ namespace AgroAdmin.Models.Foundations.ProductTwos
         public string SarfRu { get; set; }
         public string ProductPicture { get; set; }
         public string ProductIcon { get; set; }
-        public string ProductTwoName { get; set; }
         public ProductTwoType ProductTwoType { get; set; }
         [JsonIgnore]
         public List<TableTwo> TableTwos { get; set; }
