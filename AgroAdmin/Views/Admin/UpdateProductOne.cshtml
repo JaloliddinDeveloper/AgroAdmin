@@ -184,6 +184,12 @@
     </div>
 
     <div class="form-group">
+        <label asp-for="JadvalType"></label>
+        <input asp-for="JadvalType" class="form-control" />
+        <span asp-validation-for="JadvalType" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
         <label asp-for="ProductPicture">Upload New Product Picture</label>
         <input asp-for="ProductPicture" type="file" class="form-control" name="productPicture" />
         <span asp-validation-for="ProductPicture" class="text-danger"></span>

@@ -37,6 +37,7 @@
                 <th>Rasm</th>
                 <th>Mahsulot Turi</th>
                 <th>ProductName</th>
+                <th>JadvalTuri</th>
                 <th>Amallar</th> 
             </tr>
         </thead>
@@ -56,7 +57,7 @@
                     <td>@product.TasirModdaRu</td> 
                     <td>@product.KimyoviySinfiUz</td> 
                     <td>@product.KimyoviySinfiRu</td> 
-                    <td>@product.PreparatShakliUz</td>
+                   <td>@product.PreparatShakliUz</td>
                     <td>@product.PreparatShakliRu</td>
                     <td>@product.QadogiUz</td>
                     <td>@product.QadogiRu</td>
@@ -68,6 +69,7 @@
                     </td>
                     <td>@product.ProductType</td>
                     <td>@product.ProductOneName</td> 
+                    <td>@product.JadvalType</td> 
                     <td>
                         <a asp-controller="Admin" asp-action="JadvalBir" asp-route-id="@product.Id" class="btn btn-success modern-btn">Jadval</a>
                         <a asp-controller="Admin" asp-action="UpdateProductOne" asp-route-id="@product.Id" class="btn btn-warning modern-btn">Tahrirlash</a>
