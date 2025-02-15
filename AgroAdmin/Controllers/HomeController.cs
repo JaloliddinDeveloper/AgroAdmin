@@ -14,7 +14,7 @@ namespace AgroAdmin.Controllers
         [HttpPost]
         public IActionResult Index(string username, string password)
         {
-            if (username == "1" && password == "1")
+            if (username == "master" && password == "agrocom707")
             {
                 return RedirectToAction("Index", "Admin");
             }

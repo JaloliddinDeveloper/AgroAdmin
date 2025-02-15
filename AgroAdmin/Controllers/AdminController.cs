@@ -15,7 +15,7 @@ namespace AgroAdmin.Controllers
     {
         private readonly IStorageBroker storageBroker;
         private readonly string uploadsFolder = "/var/www/files";
-        private readonly string baseUrl = "http://159.89.199.17";
+        private readonly string baseUrl = "http://167.172.69.159";
 
         public AdminController(
             IStorageBroker storageBroker)
@@ -385,6 +385,7 @@ namespace AgroAdmin.Controllers
                     ProductPicture = product.ProductPicture,
                     ProductType = product.ProductType,
                     ProductOneName = product.ProductOneName,
+                    JadvalType = product.JadvalType
                 };
 
                 await this.storageBroker.InsertProductOneAsync(newProduct);
@@ -495,6 +496,7 @@ namespace AgroAdmin.Controllers
             existingProduct.IconUrl = product.IconUrl;
             existingProduct.ProductType = product.ProductType;
             existingProduct.ProductOneName = product.ProductOneName;
+            existingProduct.JadvalType = product.JadvalType;
 
             await this.storageBroker.UpdateProductOneAsync(existingProduct);
 
@@ -571,7 +573,6 @@ namespace AgroAdmin.Controllers
                 ProductOneId = tableOne.ProductOneId
             };
 
-            // Don't set Id here, let SQL Server handle it.
             await this.storageBroker.InsertTableOneAsync(tableOneTrue);
 
             return RedirectToAction("JadvalBir", new { id = tableOne.ProductOneId });
@@ -633,7 +634,6 @@ namespace AgroAdmin.Controllers
             await this.storageBroker.DeleteTableOneAsync(newsItem);
 
             return RedirectToAction("JadvalBir", new { id = newsItem.ProductOneId });
-
         }
 
         //======================================================//

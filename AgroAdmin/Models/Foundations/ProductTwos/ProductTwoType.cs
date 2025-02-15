@@ -4,6 +4,7 @@
     {
         Biostimulyator = 1,
         Mikroelement = 2,
-        Npk = 3
+        Npk = 3,
+        Organik = 4
     }
 }

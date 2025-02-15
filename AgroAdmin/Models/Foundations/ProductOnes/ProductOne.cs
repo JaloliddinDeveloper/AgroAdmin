@@ -27,6 +27,7 @@ namespace AgroAdmin.Models.Foundations.ProductOnes
         public string ProductPicture { get; set; }
         public string ProductOneName { get; set; }
         public ProductType ProductType { get; set; }
+        public int JadvalType { get; set; }
         [JsonIgnore]
         public List<TableOne> TableOnes { get; set; }  
     }
