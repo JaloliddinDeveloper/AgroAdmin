@@ -434,46 +434,32 @@ namespace AgroAdmin.Controllers
 
             if (productPicture != null && productPicture.Length > 0)
             {
-                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
-                var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                string fileName = $"{Guid.NewGuid()}{Path.GetExtension(productPicture.FileName)}";
+                string filePath = Path.Combine(uploadsFolder, fileName);
 
-                if (!Directory.Exists(productPictureDirectory))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(productPictureDirectory);
+                    await productPicture.CopyToAsync(fileStream);
                 }
 
-                using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                {
-                    await productPicture.CopyToAsync(stream);
-                }
-
-                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
+                product.ProductPicture = $"{baseUrl}/files/{fileName}";
             }
             else
             {
                 product.ProductPicture = existingProduct.ProductPicture;
             }
 
-
             if (iconUrl != null && iconUrl.Length > 0)
             {
-                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
-                var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                string iconFileName = $"{Guid.NewGuid()}{Path.GetExtension(iconUrl.FileName)}";
+                string iconFilePath = Path.Combine(uploadsFolder, iconFileName);
 
-
-                if (!Directory.Exists(iconUrlDirectory))
+                using (var iconStream = new FileStream(iconFilePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(iconUrlDirectory);
+                    await iconUrl.CopyToAsync(iconStream);
                 }
 
-
-                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                {
-                    await iconUrl.CopyToAsync(stream);
-                }
-
-
-                product.IconUrl = $"{baseUrl}/files/{iconUrl.FileName}";
+                product.IconUrl = $"{baseUrl}/files/{iconFileName}";
             }
             else
             {
@@ -751,20 +737,15 @@ namespace AgroAdmin.Controllers
 
             if (productPicture != null && productPicture.Length > 0)
             {
-                var productPicturePath = Path.Combine(uploadsFolder, productPicture.FileName);
-                var productPictureDirectory = Path.GetDirectoryName(productPicturePath);
+                string fileName = $"{Guid.NewGuid()}{Path.GetExtension(productPicture.FileName)}";
+                string filePath = Path.Combine(uploadsFolder, fileName);
 
-                if (!Directory.Exists(productPictureDirectory))
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(productPictureDirectory);
+                    await productPicture.CopyToAsync(fileStream);
                 }
 
-                using (var stream = new FileStream(productPicturePath, FileMode.Create))
-                {
-                    await productPicture.CopyToAsync(stream);
-                }
-
-                product.ProductPicture = $"{baseUrl}/files/{productPicture.FileName}";
+                product.ProductPicture = $"{baseUrl}/files/{fileName}";
             }
             else
             {
@@ -774,31 +755,21 @@ namespace AgroAdmin.Controllers
          
             if (iconUrl != null && iconUrl.Length > 0)
             {
-                var iconUrlPath = Path.Combine(uploadsFolder, iconUrl.FileName);
-                var iconUrlDirectory = Path.GetDirectoryName(iconUrlPath);
+                string iconFileName = $"{Guid.NewGuid()}{Path.GetExtension(iconUrl.FileName)}";
+                string iconFilePath = Path.Combine(uploadsFolder, iconFileName);
 
-                
-                if (!Directory.Exists(iconUrlDirectory))
+                using (var iconStream = new FileStream(iconFilePath, FileMode.Create))
                 {
-                    Directory.CreateDirectory(iconUrlDirectory);
+                    await iconUrl.CopyToAsync(iconStream);
                 }
 
-              
-                using (var stream = new FileStream(iconUrlPath, FileMode.Create))
-                {
-                    await iconUrl.CopyToAsync(stream);
-                }
-
-               
-                product.ProductIcon = $"{baseUrl}/files/{iconUrl.FileName}";
+                product.ProductIcon = $"{baseUrl}/files/{iconFileName}";
             }
             else
             {
-                
                 product.ProductIcon = existingProduct.ProductIcon;
             }
 
-           
             existingProduct.TitleUz = product.TitleUz;
             existingProduct.TitleRu = product.TitleRu;
             existingProduct.NameUz = product.NameUz;
